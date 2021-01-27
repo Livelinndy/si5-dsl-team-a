@@ -3,14 +3,14 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <groupId>io.github.mosser.arduinoml</groupId>
+    <groupId>arduinoml</groupId>
     <artifactId>external-antlr</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <generated.package>io.github.mosser.arduinoml.externals.antlr.grammar</generated.package>
+        <generated.package>arduinoml.externals.antlr.grammar</generated.package>
     </properties>
 
 
@@ -22,7 +22,7 @@
             <version>4.7</version>
         </dependency>
         <dependency>
-            <groupId>io.github.mosser.arduinoml</groupId>
+            <groupId>arduinoml</groupId>
             <artifactId>kernel-jvm</artifactId>
             <version>1.0</version>
         </dependency>

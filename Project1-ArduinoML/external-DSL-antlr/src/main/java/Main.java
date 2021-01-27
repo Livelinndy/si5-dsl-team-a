@@ -1,9 +1,9 @@
-import io.github.mosser.arduinoml.externals.antlr.ModelBuilder;
-import io.github.mosser.arduinoml.externals.antlr.StopErrorListener;
-import io.github.mosser.arduinoml.externals.antlr.grammar.*;
-import io.github.mosser.arduinoml.kernel.App;
-import io.github.mosser.arduinoml.kernel.generator.ToWiring;
-import io.github.mosser.arduinoml.kernel.generator.Visitor;
+import arduinoml.externals.antlr.ModelBuilder;
+import arduinoml.externals.antlr.StopErrorListener;
+import arduinoml.externals.antlr.grammar.*;
+import arduinoml.kernel.App;
+import arduinoml.kernel.generator.ToWiring;
+import arduinoml.kernel.generator.Visitor;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
