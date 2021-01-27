@@ -25,7 +25,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 		w(String.format("// Application name: %s\n", app.getName()));
 
 		for(Brick brick: app.getBricks()){
-			w(String.format("const %s = %d;", brick.getName(), brick.getPin()));
+			w(String.format("const int %s = %d;", brick.getName(), brick.getPin()));
 		}
 		w("\n");
 
