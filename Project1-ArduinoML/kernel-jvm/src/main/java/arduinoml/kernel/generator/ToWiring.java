@@ -10,7 +10,6 @@ import arduinoml.kernel.structural.*;
 public class ToWiring extends Visitor<StringBuffer> {
 	enum PASS {ONE, TWO}
 
-
 	public ToWiring() {
 		this.result = new StringBuffer();
 	}
@@ -36,11 +35,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 		}
 		w("};\n");
 		if (app.getInitial() != null) {
-			w("STATE currentState = " + app.getInitial().getName()+";\n\n");
-		}
-
-		for(Brick brick: app.getBricks()){
-			w("const int "+brick.getName()+" = "+brick.getPin()+";\n");
+			w("STATE currentState = " + app.getInitial().getName()+";\n");
 		}
 
 		for(Brick brick: app.getBricks()){
@@ -67,6 +62,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 	@Override
 	public void visit(Actuator actuator) {
 		if(context.get("pass") == PASS.ONE) {
+			w("const int "+actuator.getName()+" = "+actuator.getPin()+";\n");
 			return;
 		}
 		if(context.get("pass") == PASS.TWO) {
@@ -75,12 +71,12 @@ public class ToWiring extends Visitor<StringBuffer> {
 		}
 	}
 
-
 	@Override
 	public void visit(Sensor sensor) {
 		if(context.get("pass") == PASS.ONE) {
 			w(String.format("\nboolean %sBounceGuard = false;\n", sensor.getName()));
 			w(String.format("long %sLastDebounceTime = 0;\n", sensor.getName()));
+			w("const int "+sensor.getName()+" = "+sensor.getPin()+";\n");
 			return;
 		}
 		if(context.get("pass") == PASS.TWO) {
