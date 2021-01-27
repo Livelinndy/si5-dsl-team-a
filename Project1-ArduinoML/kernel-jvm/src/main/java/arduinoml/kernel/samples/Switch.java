@@ -1,4 +1,4 @@
-package arduinoml.kernel.samples;
+package io.github.mosser.arduinoml.kernel.samples;
 
 import arduinoml.kernel.App;
 import arduinoml.kernel.behavioral.*;

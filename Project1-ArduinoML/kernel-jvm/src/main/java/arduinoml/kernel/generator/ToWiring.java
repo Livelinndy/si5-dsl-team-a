@@ -8,86 +8,135 @@ import arduinoml.kernel.structural.*;
  * Quick and dirty visitor to support the generation of Wiring code
  */
 public class ToWiring extends Visitor<StringBuffer> {
+	enum PASS {ONE, TWO}
 
-	private final static String CURRENT_STATE = "current_state";
 
 	public ToWiring() {
 		this.result = new StringBuffer();
 	}
 
 	private void w(String s) {
-		result.append(String.format("%s\n",s));
+		result.append(String.format("%s",s));
 	}
 
 	@Override
 	public void visit(App app) {
-		w("// Wiring code generated from an ArduinoML model");
-		w(String.format("// Application name: %s\n", app.getName()));
+		//first pass, create global vars
+		context.put("pass", PASS.ONE);
+		w("// Wiring code generated from an ArduinoML model\n");
+		w(String.format("// Application name: %s\n", app.getName())+"\n");
+
+		w("long debounce = 200;\n");
+		w("\nenum STATE {");
+		String sep ="";
+		for(State state: app.getStates()){
+			w(sep);
+			state.accept(this);
+			sep=", ";
+		}
+		w("};\n");
+		if (app.getInitial() != null) {
+			w("STATE currentState = " + app.getInitial().getName()+";\n\n");
+		}
 
 		for(Brick brick: app.getBricks()){
-			w(String.format("const int %s = %d;", brick.getName(), brick.getPin()));
+			w("const int "+brick.getName()+" = "+brick.getPin()+";\n");
 		}
-		w("\n");
 
-		w("void setup(){");
+		for(Brick brick: app.getBricks()){
+			brick.accept(this);
+		}
+
+		//second pass, setup and loop
+		context.put("pass",PASS.TWO);
+		w("\nvoid setup(){\n");
 		for(Brick brick: app.getBricks()){
 			brick.accept(this);
 		}
 		w("}\n");
 
-		w("long time = 0; long debounce = 200;\n");
-
+		w("\nvoid loop() {\n" +
+			"\tswitch(currentState){\n");
 		for(State state: app.getStates()){
 			state.accept(this);
 		}
-
-		if (app.getInitial() != null) {
-			w("void loop() {");
-			w(String.format("  state_%s();", app.getInitial().getName()));
-			w("}");
-		}
+		w("\t}\n" +
+			"}");
 	}
 
 	@Override
 	public void visit(Actuator actuator) {
-	 	w(String.format("  pinMode(%s, OUTPUT); // Actuator", actuator.getName()));
+		if(context.get("pass") == PASS.ONE) {
+			return;
+		}
+		if(context.get("pass") == PASS.TWO) {
+			w(String.format("  pinMode(%s, OUTPUT); // Actuator\n", actuator.getName()));
+			return;
+		}
 	}
+
 
 	@Override
 	public void visit(Sensor sensor) {
-		w(String.format("  pinMode(%s, INPUT);  // Sensor", sensor.getName()));
+		if(context.get("pass") == PASS.ONE) {
+			w(String.format("\nboolean %sBounceGuard = false;\n", sensor.getName()));
+			w(String.format("long %sLastDebounceTime = 0;\n", sensor.getName()));
+			return;
+		}
+		if(context.get("pass") == PASS.TWO) {
+			w(String.format("  pinMode(%s, INPUT);  // Sensor\n", sensor.getName()));
+			return;
+		}
 	}
 
 	@Override
 	public void visit(State state) {
-		w(String.format("void state_%s() {",state.getName()));
-		for(Action action: state.getActions()) {
-			action.accept(this);
+		if(context.get("pass") == PASS.ONE){
+			w(state.getName());
+			return;
 		}
+		if(context.get("pass") == PASS.TWO) {
+			w("\t\tcase " + state.getName() + ":\n");
+			for (Action action : state.getActions()) {
+				action.accept(this);
+			}
 
-		if (state.getTransition() != null) {
-			w("  boolean guard = millis() - time > debounce;");
-			context.put(CURRENT_STATE, state);
-			state.getTransition().accept(this);
-			w("}\n");
+			if (state.getTransition() != null) {
+				state.getTransition().accept(this);
+				w("\t\t\tbreak;\n");
+			}
+			return;
 		}
 
 	}
 
 	@Override
 	public void visit(Transition transition) {
-		w(String.format("  if( digitalRead(%s) == %s && guard ) {",
-				transition.getSensor().getName(),transition.getValue()));
-		w("    time = millis();");
-		w(String.format("    state_%s();",transition.getNext().getName()));
-		w("  } else {");
-		w(String.format("    state_%s();",((State) context.get(CURRENT_STATE)).getName()));
-		w("  }");
+		if(context.get("pass") == PASS.ONE) {
+			return;
+		}
+		if(context.get("pass") == PASS.TWO) {
+			String sensorName = transition.getSensor().getName();
+			w(String.format("\t\t\t%sBounceGuard = millis() - %sLastDebounceTime > debounce;\n",
+					sensorName, sensorName));
+			w(String.format("\t\t\tif( digitalRead(%s) == %s && %sBounceGuard) {\n",
+					transition.getSensor().getName(), transition.getValue(), sensorName));
+			w(String.format("\t\t\t\t%sLastDebounceTime = millis();\n", sensorName));
+			w("\t\t\t\tcurrentState = " + transition.getNext().getName() + ";\n");
+			w("\t\t\t}\n");
+			return;
+		}
 	}
 
 	@Override
 	public void visit(Action action) {
-		w(String.format("  digitalWrite(%s,%s);",action.getActuator().getName(),action.getValue()));
+		if(context.get("pass") == PASS.ONE) {
+			return;
+		}
+		if(context.get("pass") == PASS.TWO) {
+			w(String.format("\t\t\tdigitalWrite(%s,%s);\n",action.getActuator().getName(),action.getValue()));
+			return;
+		}
 	}
 
 }
