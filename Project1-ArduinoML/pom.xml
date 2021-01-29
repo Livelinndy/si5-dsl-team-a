@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>arduinoml</groupId>
+    <artifactId>root</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>ArduinoML :: Root Project</name>
+    <description>A Zoo to collect implementaiton of the ArduinoML example</description>
+
+
+    <organization>
+        <name>Université Côte d'Azur, CNRS , I3S, France</name>
+        <url>http://www.i3s.unice.fr</url>
+    </organization>
+
+    <modules>
+        <module>kernel-jvm</module>
+        <module>external-DSL-antlr</module>
+        <module>internal-DSL-groovy</module>
+    </modules>
+</project>
