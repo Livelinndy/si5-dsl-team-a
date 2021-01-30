@@ -5,6 +5,8 @@ import arduinoml.externals.antlr.grammar.*;
 
 import arduinoml.kernel.App;
 import arduinoml.kernel.behavioral.Action;
+import arduinoml.kernel.behavioral.Terminal;
+import arduinoml.kernel.behavioral.Condition;
 import arduinoml.kernel.behavioral.State;
 import arduinoml.kernel.behavioral.Transition;
 import arduinoml.kernel.structural.Actuator;
@@ -39,11 +41,12 @@ public class ModelBuilder extends ArduinomlBaseListener {
 
     private class Binding { // used to support state resolution for transitions
         String to; // name of the next state, as its instance might not have been compiled yet
-        Sensor trigger;
-        SIGNAL value;
+        Condition condition; //sensor and value
     }
 
     private State currentState = null;
+    private Binding currentBinding = null;
+    private Terminal currentTerminal = null;
 
     /**************************
      ** Listening mechanisms **
@@ -59,8 +62,9 @@ public class ModelBuilder extends ArduinomlBaseListener {
         // Resolving states in transitions
         bindings.forEach((key, binding) ->  {
             Transition t = new Transition();
-            t.setSensor(binding.trigger);
-            t.setValue(binding.value);
+            // t.setSensor(binding.trigger);
+            // t.setValue(binding.value);
+            t.setConditions(bindings.condition);
             t.setNext(states.get(binding.to));
             states.get(key).setTransition(t);
         });
@@ -117,10 +121,30 @@ public class ModelBuilder extends ArduinomlBaseListener {
         // Creating a placeholder as the next state might not have been compiled yet.
         Binding toBeResolvedLater = new Binding();
         toBeResolvedLater.to      = ctx.next.getText();
-        toBeResolvedLater.trigger = sensors.get(ctx.trigger.getText());
-        toBeResolvedLater.value   = SIGNAL.valueOf(ctx.value.getText());
-        bindings.put(currentState.getName(), toBeResolvedLater);
+        toBeResolvedLater.condition = new ArrayList<Condition>();
+
+        Condition condition = new Condition();
+        condition.setSensor(sensors.get(ctx.trigger.getText()));
+        condition.setValue(SIGNAL.valueOf(ctx.value.getText()));
+        toBeResolvedLater.condition.add(condition);
+        this.currentBinding = toBeResolvedLater;
     }
+
+    @Override
+    public void exitTransition(ArduinomlParser.TransitionContext ctx) {
+        bindings.put(currentState.getName(), this.currentBinding);
+        this.currentBinding = null;
+    }
+
+    @Override
+    void enterCondition(ArduinomlParser.InitialContext ctx) {
+        Condition condition = new Condition();
+        condition.setSensor(sensors.get(ctx.trigger.getText()));
+        condition.setValue(SIGNAL.valueOf(ctx.value.getText()));
+        currentBinding.condition.add(condition);
+    }
+
+    // void exitCondition(ArduinomlParser.InitialContext ctx) {}
 
     @Override
     public void enterInitial(ArduinomlParser.InitialContext ctx) {

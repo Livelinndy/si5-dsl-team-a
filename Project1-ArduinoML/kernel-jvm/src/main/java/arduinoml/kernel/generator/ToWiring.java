@@ -106,17 +106,27 @@ public class ToWiring extends Visitor<StringBuffer> {
 
 	}
 
+	// @Override
+	// public void visit(Condition condition) { }
+
 	@Override
 	public void visit(Transition transition) {
 		if(context.get("pass") == PASS.ONE) {
 			return;
 		}
 		if(context.get("pass") == PASS.TWO) {
-			String sensorName = transition.getSensor().getName();
+			String sensorName = transition.getConditions().get(0).getSensor().getName();
 			w(String.format("\t\t\t%sBounceGuard = millis() - %sLastDebounceTime > debounce;\n",
 					sensorName, sensorName));
-			w(String.format("\t\t\tif( digitalRead(%s) == %s && %sBounceGuard) {\n",
-					transition.getSensor().getName(), transition.getValue(), sensorName));
+			w("\t\t\tif( ");
+			String sep = "";
+			for (Condition condition: transition.getConditions()) {
+				w(String.format(
+						"%sdigitalRead(%s) == %s", sep,
+						condition.getSensor().getName(), condition.getValue()));
+				sep = " && ";
+			}
+			w(String.format(" && %sBounceGuard) {\n", sensorName));
 			w(String.format("\t\t\t\t%sLastDebounceTime = millis();\n", sensorName));
 			w("\t\t\t\tcurrentState = " + transition.getNext().getName() + ";\n");
 			w("\t\t\t}\n");
@@ -135,4 +145,14 @@ public class ToWiring extends Visitor<StringBuffer> {
 		}
 	}
 
+	@Override
+	public void visit(Condition condition) {
+		if(context.get("pass") == PASS.ONE) {
+			return;
+		}
+		if(context.get("pass") == PASS.TWO) {
+			w(String.format("\t\t\t%s == %s",condition.getSensor().getName(),condition.getValue()));
+			return;
+		}
+	}
 }

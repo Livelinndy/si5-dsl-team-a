@@ -2,7 +2,8 @@ package arduinoml.kernel.behavioral;
 
 import arduinoml.kernel.generator.Visitable;
 import arduinoml.kernel.generator.Visitor;
-import arduinoml.kernel.structural.*;
+import arduinoml.kernel.structural.Sensor;
+import arduinoml.kernel.structural.SIGNAL;
 
 public class Condition implements Visitable {
 

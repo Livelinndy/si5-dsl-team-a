@@ -2,13 +2,14 @@ package arduinoml.kernel.behavioral;
 
 import arduinoml.kernel.generator.Visitable;
 import arduinoml.kernel.generator.Visitor;
-import arduinoml.kernel.structural.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Transition implements Visitable {
 
 	private State next;
 	private List<Condition> conditions = new ArrayList<Condition>();
-
 
 	public State getNext() {
 		return next;
