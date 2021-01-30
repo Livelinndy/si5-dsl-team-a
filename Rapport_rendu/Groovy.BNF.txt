@@ -1,0 +1,29 @@
+<root>        ::= <bricks> <states> <initial> <transitions> <export> <EOF>
+
+<bricks>      ::= ( <sensor> | <actuator> )+
+<sensor>      ::= "sensor" <location>
+<actuator>    ::= "actuator" <location>
+<location>    ::= <IDENTIFIER> "pin" <PORT_NUMBER>
+
+<states>      ::= <state>+
+<state>       ::= "state" <IDENTIFIER> "means" <action>
+<action>      ::= <IDENTIFIER> "becomes" <SIGNAL> <recursiveAction>*
+<recursiveAction>  ::= "and" <IDENTIFIER> "becomes" <SIGNAL>
+
+<initial>     ::= "initial" <IDENTIFIER>
+
+<transitions> ::= <transition>+
+<transition>  ::= "from" <IDENTIFIER> "to" <IDENTIFIER> "when" <condition>
+<condition>   ::= <IDENTIFIER> "becomes" <SIGNAL>
+
+<export>      ::= "export" <IDENTIFIER>
+
+<PORT_NUMBER> ::= <DIGIT>[1-2]?
+<IDENTIFIER>  ::= <LOWERCASE> ( <LOWERCASE> | <LOWERCASE> | <DIGIT> )+
+<SIGNAL>      ::= "high" | "low"
+<LOWERCASE>	  ::= [a-z]
+<UPPERCASE>	  ::= [A-Z]
+<DIGIT>	      ::= [0-9]
+<NEWLINE>     ::= ("\r"? "\n" | "\r")+      -> skip
+<WHITESPACE>  ::= ((" " | "\t")+)           -> skip
+<COMMENT>     ::= "#" ~( "\r" | "\n" )*     -> skip

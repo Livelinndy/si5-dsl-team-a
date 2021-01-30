@@ -1,0 +1,24 @@
+<root>            ::= <declaration> <bricks> <states> <EOF>
+<declaration> ::= "application" <IDENTIFIER>
+<bricks>      ::= ( <sensor> | <actuator> )+
+<sensor>          ::= "sensor" <location>
+<actuator>        ::= "actuator" <location>
+<location>        ::= <IDENTIFIER> ":" <PORT_NUMBER>
+<states>      ::= <state>+
+<state>           ::= <initial>? <IDENTIFIER> "{"  <beep>* <action>+ <transition> "}"
+<action>          ::= <IDENTIFIER> "<=" <SIGNAL>
+<beep>            ::= <BEEP_TYPE> <NB_BEEPS>
+<transition>      ::= <IDENTIFIER> "is" <SIGNAL> <condition>* "=>" <IDENTIFIER>
+<condition>       ::= <BOOL> <IDENTIFIER> "is" <SIGNAL>
+<initial>         ::= "->"
+<PORT_NUMBER> ::= <DIGIT> | "11" | "12"
+<IDENTIFIER>  ::= <LOWERCASE> ( <LOWERCASE> | <LOWERCASE> | <DIGIT> )+
+<SIGNAL>      ::= "HIGH" | "LOW"
+<BOOL>            ::= "&"    | "|"
+<BEEP_TYPE>       ::= "longbeep" | "shortbeep"
+<NB_BEEPS>        ::= <DIGIT>?
+<LOWERCASE>       ::= [a-z]
+<UPPERCASE>       ::= [A-Z]
+<DIGIT>           ::= [0-9]
+<NEWLINE>     ::= ("\r"? "\n" | "\r")+      -> skip
+<WHITESPACE>  ::= ((" " | "\t")+)           -> skip
