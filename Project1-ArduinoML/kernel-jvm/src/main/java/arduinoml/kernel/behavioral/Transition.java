@@ -7,8 +7,7 @@ import arduinoml.kernel.structural.*;
 public class Transition implements Visitable {
 
 	private State next;
-	private Sensor sensor;
-	private SIGNAL value;
+	private List<Condition> conditions = new ArrayList<Condition>();
 
 
 	public State getNext() {
@@ -19,20 +18,12 @@ public class Transition implements Visitable {
 		this.next = next;
 	}
 
-	public Sensor getSensor() {
-		return sensor;
+	public List<Condition> getConditions() {
+		return conditions;
 	}
 
-	public void setSensor(Sensor sensor) {
-		this.sensor = sensor;
-	}
-
-	public SIGNAL getValue() {
-		return value;
-	}
-
-	public void setValue(SIGNAL value) {
-		this.value = value;
+	public void setConditions(List<Condition> conditions) {
+		this.conditions = conditions;
 	}
 
 	@Override
