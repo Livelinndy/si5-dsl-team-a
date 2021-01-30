@@ -118,15 +118,15 @@ public class ToWiring extends Visitor<StringBuffer> {
 			String sensorName = transition.getConditions().get(0).getSensor().getName();
 			w(String.format("\t\t\t%sBounceGuard = millis() - %sLastDebounceTime > debounce;\n",
 					sensorName, sensorName));
-			w("\t\t\tif( ");
+			w("\t\t\tif( (");
 			String sep = "";
 			for (Condition condition: transition.getConditions()) {
 				w(String.format(
 						"%sdigitalRead(%s) == %s", sep,
 						condition.getSensor().getName(), condition.getValue()));
-				sep = " && ";
+				sep = transition.getIsLogicalAND() ? " && " : " || ";
 			}
-			w(String.format(" && %sBounceGuard) {\n", sensorName));
+			w(String.format(" ) && %sBounceGuard) {\n", sensorName));
 			w(String.format("\t\t\t\t%sLastDebounceTime = millis();\n", sensorName));
 			w("\t\t\t\tcurrentState = " + transition.getNext().getName() + ";\n");
 			w("\t\t\t}\n");

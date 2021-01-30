@@ -9,10 +9,17 @@ import java.util.List;
 public class Transition implements Visitable {
 
 	private State next;
+	private boolean isLogicalAND = true;
 	private List<Condition> conditions = new ArrayList<Condition>();
 
 	public State getNext() {
 		return next;
+	}
+
+	public boolean getIsLogicalAND() { return isLogicalAND;}
+
+	public void setIsLogicalAND(boolean _isAND) {
+		isLogicalAND = _isAND;
 	}
 
 	public void setNext(State next) {

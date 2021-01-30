@@ -18,7 +18,7 @@ states          :   state+;
     state       :   initial? name=IDENTIFIER '{'  action+ transition '}';
     action      :   receiver=IDENTIFIER '<=' value=SIGNAL;
     transition  :   trigger=IDENTIFIER 'is' value=SIGNAL condition* '=>' next=IDENTIFIER ;
-    condition   :   '&' trigger=IDENTIFIER 'is' value=SIGNAL ;
+    condition   :   ('&'|'|') trigger=IDENTIFIER 'is' value=SIGNAL ;
     initial     :   '->';
 
 /*****************
@@ -26,7 +26,7 @@ states          :   state+;
  *****************/
 
 PORT_NUMBER     :   [1-9] | '11' | '12';
-IDENTIFIER      :   LOWERCASE (LOWERCASE|UPPERCASE)+;
+IDENTIFIER      :   LOWERCASE (LOWERCASE|UPPERCASE|[0-9]+)+;
 SIGNAL          :   'HIGH' | 'LOW';
 
 /*************
