@@ -15,8 +15,9 @@ bricks          :   (sensor|actuator)+;
     location    :   id=IDENTIFIER ':' port=PORT_NUMBER;
 
 states          :   state+;
-    state       :   initial? name=IDENTIFIER '{'  action+ transition '}';
+    state       :   initial? name=IDENTIFIER '{'  beep* action+ transition '}';
     action      :   receiver=IDENTIFIER '<=' value=SIGNAL;
+    beep        :   BEEP_TYPE value=NB_BEEPS;
     transition  :   trigger=IDENTIFIER 'is' value=SIGNAL condition* '=>' next=IDENTIFIER ;
     condition   :   booleanOperator=BOOL trigger=IDENTIFIER 'is' value=SIGNAL ;
     initial     :   '->';
@@ -29,6 +30,8 @@ PORT_NUMBER     :   [1-9] | '11' | '12';
 IDENTIFIER      :   LOWERCASE (LOWERCASE|UPPERCASE|NUMBER)+;
 SIGNAL          :   'HIGH' | 'LOW';
 BOOL            :   '&'    | '|';
+BEEP_TYPE       :   'longbeep' | 'shortbeep';
+NB_BEEPS        :   [1-9]?;
 
 /*************
  ** Helpers **

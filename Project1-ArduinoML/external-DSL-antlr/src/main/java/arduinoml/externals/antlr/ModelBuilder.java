@@ -148,8 +148,6 @@ public class ModelBuilder extends ArduinomlBaseListener {
         currentBinding.conditionList.add(condition);
     }
 
-    // void exitCondition(ArduinomlParser.InitialContext ctx) {}
-
     @Override
     public void enterInitial(ArduinomlParser.InitialContext ctx) {
         this.theApp.setInitial(this.currentState);

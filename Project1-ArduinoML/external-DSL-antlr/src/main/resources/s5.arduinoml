@@ -1,0 +1,22 @@
+application signalingStuffByUsingSounds
+
+# Declaring bricks
+sensor button: 7
+actuator led: 8
+actuator buzzer: 2
+
+# Declaring states
+
+on {
+	longbeep 1
+	shortbeep 3
+    led <= LOW
+	buzzer <= HIGH
+    button is HIGH => off
+}
+
+-> off {
+    led <= LOW
+	buzzer <= LOW
+    button is HIGH => on
+}
