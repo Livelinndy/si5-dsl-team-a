@@ -7,6 +7,7 @@ import arduinoml.kernel.App;
 import arduinoml.kernel.behavioral.Action;
 import arduinoml.kernel.behavioral.State;
 import arduinoml.kernel.behavioral.Transition;
+import arduinoml.kernel.behavioral.Condition;
 import arduinoml.kernel.generator.ToWiring;
 import arduinoml.kernel.generator.Visitor;
 import arduinoml.kernel.structural.Actuator;
@@ -52,11 +53,10 @@ public class GroovuinoMLModel {
 		this.binding.setVariable(name, state);
 	}
 	
-	public void createTransition(State from, State to, Sensor sensor, SIGNAL value) {
+	public void createTransition(State from, State to, List<Condition> conditions) {
 		Transition transition = new Transition();
 		transition.setNext(to);
-		transition.setSensor(sensor);
-		transition.setValue(value);
+		transition.setConditions(conditions);
 		from.setTransition(transition);
 	}
 	

@@ -26,6 +26,8 @@ contribute(currentType(subType('groovy.lang.Script'))) {
 	method type: Script, name: 'means', params: [actuatorName:String], doc: 'Identify which Actuator is concerned by the state'
 	method type: Script, name: 'becomes', params: [signal:Object], doc: 'Define new Actuator value'
 	method type: Script, name: 'becomes', params: [signalName:String], doc: 'Define new Actuator value'
+	method type: Script, name: 'and', params: [actuator:Object], doc: 'Identify another Actuator that is concerned by the state'
+	method type: Script, name: 'and', params: [actuatorName:String], doc: 'Identify another Actuator that is concerned by the state'
 
 	method type: void, name: 'initial', params: [state:Object], doc: 'Define the initial State'
 	method type: void, name: 'initial', params: [stateName:String], doc: 'Define the initial State'

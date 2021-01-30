@@ -4,6 +4,7 @@ import java.util.List;
 
 import arduinoml.kernel.behavioral.Action
 import arduinoml.kernel.behavioral.State
+import arduinoml.kernel.behavioral.Condition
 import arduinoml.kernel.structural.Actuator
 import arduinoml.kernel.structural.Sensor
 import arduinoml.kernel.structural.SIGNAL
@@ -46,15 +47,22 @@ abstract class GroovuinoMLBasescript extends Script {
 	// from state1 to state2 when sensor becomes signal
 	def from(state1) {
 		[to: { state2 -> 
-			[when: { sensor ->
+			List<Condition> conditions = new ArrayList<Condition>()
+			((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().createTransition(
+				state1 instanceof String ? (State)((GroovuinoMLBinding)this.getBinding()).getVariable(state1) : (State)state1,
+				state2 instanceof String ? (State)((GroovuinoMLBinding)this.getBinding()).getVariable(state2) : (State)state2,
+				conditions) 	
+			def close
+			close = { sensor ->
 				[becomes: { signal -> 
-					((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().createTransition(
-						state1 instanceof String ? (State)((GroovuinoMLBinding)this.getBinding()).getVariable(state1) : (State)state1, 
-						state2 instanceof String ? (State)((GroovuinoMLBinding)this.getBinding()).getVariable(state2) : (State)state2, 
-						sensor instanceof String ? (Sensor)((GroovuinoMLBinding)this.getBinding()).getVariable(sensor) : (Sensor)sensor, 
-						signal instanceof String ? (SIGNAL)((GroovuinoMLBinding)this.getBinding()).getVariable(signal) : (SIGNAL)signal)
+					Condition condition = new Condition()
+					condition.setSensor(sensor instanceof String ? (Sensor)((GroovuinoMLBinding)this.getBinding()).getVariable(sensor) : (Sensor)sensor)
+					condition.setValue(signal instanceof String ? (SIGNAL)((GroovuinoMLBinding)this.getBinding()).getVariable(signal) : (SIGNAL)signal)
+					conditions.add(condition)
+					[and: close]
 				}]
-			}]
+			}
+			[when: close]
 		}]
 	}
 	
