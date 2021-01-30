@@ -1,10 +1,10 @@
 package arduinoml.kernel.behavioral;
 
-import arduinoml.kernel.generator.Visitable;
+// import arduinoml.kernel.generator.Visitable;
 import arduinoml.kernel.generator.Visitor;
 import arduinoml.kernel.structural.*;
 
-public class Condition implements Visitable {
+public class Condition {
 
 	private Sensor sensor;
 	private SIGNAL value;
@@ -25,8 +25,8 @@ public class Condition implements Visitable {
 		this.value = value;
 	}
 
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visit(this);
-	}
+	// @Override
+	// public void accept(Visitor visitor) {
+// 		visitor.visit(this);
+	//}
 }

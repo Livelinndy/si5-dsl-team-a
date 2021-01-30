@@ -44,13 +44,22 @@ public class Switch {
 		// Creating transitions
 		Transition on2off = new Transition();
 		on2off.setNext(off);
-		on2off.setSensor(button);
-		on2off.setValue(SIGNAL.HIGH);
+		Condition conditionOne = new Condition();
+		conditionOne.setSensor(button);
+		conditionOne.setValue(SIGNAL.HIGH);
+		List<Condition> conditionListOne = new ArrayList<Condition>();
+		conditionListOne.add(conditionOne);
+		on2off.setConditions(conditionListOne);
+
 
 		Transition off2on = new Transition();
 		off2on.setNext(on);
-		off2on.setSensor(button);
-		off2on.setValue(SIGNAL.HIGH);
+		Condition condition = new Condition();
+		condition.setSensor(button);
+		condition.setValue(SIGNAL.HIGH);
+		List<Condition> conditionList = new ArrayList<Condition>();
+		conditionList.add(condition);
+		off2on.setConditions(conditionList);
 
 		// Binding transitions to states
 		on.setTransition(on2off);
