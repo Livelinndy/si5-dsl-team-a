@@ -2,7 +2,7 @@ application dualCheckAlarm
 
 # Declaring bricks
 sensor button1: 7
-sensor button2: 8
+sensor button2: 4
 actuator buzzer: 2
 
 # Declaring states
