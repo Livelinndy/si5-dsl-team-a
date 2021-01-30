@@ -1,4 +1,4 @@
-application multiStateAlarm
+application signalingStuffByUsingSounds
 
 # Declaring bricks
 sensor button: 7
@@ -7,20 +7,16 @@ actuator buzzer: 2
 
 # Declaring states
 
-on1 {
+on {
+	longbeep 1
+	shortbeep 3
     led <= LOW
 	buzzer <= HIGH
-    button is HIGH => on2
-}
-
-on2 {
-    led <= HIGH
-	buzzer <= LOW
     button is HIGH => off
 }
 
 -> off {
     led <= LOW
 	buzzer <= LOW
-    button is HIGH => on1
+    button is HIGH => on
 }

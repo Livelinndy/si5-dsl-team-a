@@ -42,6 +42,7 @@ public class ModelBuilder extends ArduinomlBaseListener {
 
     private class Binding { // used to support state resolution for transitions
         String to; // name of the next state, as its instance might not have been compiled yet
+        boolean isLogicalAND;
         List<Condition> conditionList; //sensor and value
     }
 
@@ -64,6 +65,7 @@ public class ModelBuilder extends ArduinomlBaseListener {
             Transition t = new Transition();
             // t.setSensor(binding.trigger);
             // t.setValue(binding.value);
+            t.setIsLogicalAND(binding.isLogicalAND);
             t.setConditions(binding.conditionList);
             t.setNext(states.get(binding.to));
             states.get(key).setTransition(t);
@@ -139,12 +141,12 @@ public class ModelBuilder extends ArduinomlBaseListener {
     @Override
     public void enterCondition(ArduinomlParser.ConditionContext ctx) {
         Condition condition = new Condition();
+        currentBinding.isLogicalAND = ctx.booleanOperator.getText().equals("&") ? true : false;
+
         condition.setSensor(sensors.get(ctx.trigger.getText()));
         condition.setValue(SIGNAL.valueOf(ctx.value.getText()));
         currentBinding.conditionList.add(condition);
     }
-
-    // void exitCondition(ArduinomlParser.InitialContext ctx) {}
 
     @Override
     public void enterInitial(ArduinomlParser.InitialContext ctx) {
