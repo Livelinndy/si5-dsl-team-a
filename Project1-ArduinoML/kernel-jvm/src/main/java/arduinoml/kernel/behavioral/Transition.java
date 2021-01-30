@@ -3,6 +3,9 @@ package arduinoml.kernel.behavioral;
 import arduinoml.kernel.generator.Visitable;
 import arduinoml.kernel.generator.Visitor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Transition implements Visitable {
 
 	private State next;

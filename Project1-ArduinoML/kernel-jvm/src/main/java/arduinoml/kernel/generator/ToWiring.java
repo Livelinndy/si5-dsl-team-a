@@ -115,9 +115,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 			return;
 		}
 		if(context.get("pass") == PASS.TWO) {
-			String sensorName;
-			if (transition.getConditions().size() > 1)
-				sensorName = transition.getConditions()[0].getSensor().getName();
+			String sensorName = transition.getConditions().get(0).getSensor().getName();
 			w(String.format("\t\t\t%sBounceGuard = millis() - %sLastDebounceTime > debounce;\n",
 					sensorName, sensorName));
 			w("\t\t\tif( ");
@@ -147,4 +145,14 @@ public class ToWiring extends Visitor<StringBuffer> {
 		}
 	}
 
+	@Override
+	public void visit(Condition condition) {
+		if(context.get("pass") == PASS.ONE) {
+			return;
+		}
+		if(context.get("pass") == PASS.TWO) {
+			w(String.format("\t\t\t%s == %s",condition.getSensor().getName(),condition.getValue()));
+			return;
+		}
+	}
 }

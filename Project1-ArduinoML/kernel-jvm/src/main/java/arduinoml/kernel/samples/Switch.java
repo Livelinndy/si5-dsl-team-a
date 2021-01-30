@@ -7,6 +7,8 @@ import arduinoml.kernel.generator.Visitor;
 import arduinoml.kernel.structural.*;
 
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Switch {
 
