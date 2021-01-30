@@ -7,13 +7,13 @@ actuator buzzer: 2
 
 # Declaring states
 
-onone {
+on1 {
     led <= LOW
 	buzzer <= HIGH
-    button is HIGH => ontwo
+    button is HIGH => on2
 }
 
-ontwo {
+on2 {
     led <= HIGH
 	buzzer <= LOW
     button is HIGH => off
@@ -22,5 +22,5 @@ ontwo {
 -> off {
     led <= LOW
 	buzzer <= LOW
-    button is HIGH => onone
+    button is HIGH => on1
 }

@@ -26,7 +26,7 @@ states          :   state+;
  *****************/
 
 PORT_NUMBER     :   [1-9] | '11' | '12';
-IDENTIFIER      :   LOWERCASE (LOWERCASE|UPPERCASE|[0-9]+)+;
+IDENTIFIER      :   LOWERCASE (LOWERCASE|UPPERCASE|NUMBER)+;
 SIGNAL          :   'HIGH' | 'LOW';
 BOOL            :   '&'    | '|';
 
@@ -36,6 +36,7 @@ BOOL            :   '&'    | '|';
 
 fragment LOWERCASE  : [a-z];                                 // abstract rule, does not really exists
 fragment UPPERCASE  : [A-Z];
+fragment NUMBER     : [0-9];
 NEWLINE             : ('\r'? '\n' | '\r')+      -> skip;
 WS                  : ((' ' | '\t')+)           -> skip;     // who cares about whitespaces?
 COMMENT             : '#' ~( '\r' | '\n' )*     -> skip;     // Single line comments, starting with a #
