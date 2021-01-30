@@ -10,6 +10,7 @@ import java.util.List;
 public class State implements NamedElement, Visitable {
 
 	private String name;
+	private BeforeState beforeState;
 	private List<Action> actions = new ArrayList<Action>();
 	private Transition transition;
 
@@ -29,6 +30,14 @@ public class State implements NamedElement, Visitable {
 
 	public void setActions(List<Action> actions) {
 		this.actions = actions;
+	}
+
+	public BeforeState getBeforeState() {
+		return beforeState;
+	}
+
+	public void setBeforeState(BeforeState beforeState) {
+		this.beforeState = beforeState;
 	}
 
 	public Transition getTransition() {

@@ -38,6 +38,12 @@ public class ToWiring extends Visitor<StringBuffer> {
 			w("STATE currentState = " + app.getInitial().getName()+";\n");
 		}
 
+		for(State state: app.getStates()){
+			if(state.getBeforeState() != null){
+				w(String.format("boolean enter%s = false;\n", state.getName()));
+			}
+		}
+
 		for(Brick brick: app.getBricks()){
 			brick.accept(this);
 		}
@@ -86,6 +92,30 @@ public class ToWiring extends Visitor<StringBuffer> {
 	}
 
 	@Override
+	public void visit(BeforeState beforeState){
+		if(context.get("pass") == PASS.ONE){
+			return;
+		}
+		if(context.get("pass") == PASS.TWO){
+			String step = "";
+			for(BEEP beep : beforeState.getBeeps()){
+				w(String.format("\t\t\t%s\n", step));
+				w(String.format("\t\t\tdigitalWrite(%s, HIGH);\n", beforeState.getActuator().getName()));
+				if( beep == BEEP.LONGBEEP ){
+					w("\t\t\tdelay(1500);\n");
+				}
+				else if( beep == BEEP.SHORTBEEP ){
+					w("\t\t\tdelay(500);\n");
+				}
+				w(String.format("\t\t\tdigitalWrite(%s, LOW);\n", beforeState.getActuator().getName()));
+				step = "delay(500);";
+			}
+			w("\t\t}\n");
+			return;
+		}
+	}
+
+	@Override
 	public void visit(State state) {
 		if(context.get("pass") == PASS.ONE){
 			w(state.getName());
@@ -93,6 +123,12 @@ public class ToWiring extends Visitor<StringBuffer> {
 		}
 		if(context.get("pass") == PASS.TWO) {
 			w("\t\tcase " + state.getName() + ":\n");
+			BeforeState beforeState = state.getBeforeState();
+			if(beforeState != null){
+				w(String.format("\t\tif( !enter%s ) {\n", state.getName()));
+				w(String.format("\t\t\tenter%s = true;\n", state.getName()));
+				beforeState.accept(this);
+			}
 			for (Action action : state.getActions()) {
 				action.accept(this);
 			}
@@ -128,7 +164,11 @@ public class ToWiring extends Visitor<StringBuffer> {
 			}
 			w(String.format(" ) && %sBounceGuard) {\n", sensorName));
 			w(String.format("\t\t\t\t%sLastDebounceTime = millis();\n", sensorName));
-			w("\t\t\t\tcurrentState = " + transition.getNext().getName() + ";\n");
+			State nextState = transition.getNext();
+			w("\t\t\t\tcurrentState = " + nextState.getName() + ";\n");
+			if(nextState.getBeforeState() != null){
+				w(String.format("\t\t\t\tenter%s = false;\n", nextState.getName()));
+			}
 			w("\t\t\t}\n");
 			return;
 		}

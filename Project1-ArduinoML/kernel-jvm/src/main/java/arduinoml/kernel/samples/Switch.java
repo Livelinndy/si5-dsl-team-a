@@ -23,6 +23,11 @@ public class Switch {
 		led.setName("LED");
 		led.setPin(12);
 
+		Actuator buzzer = new Actuator();
+		buzzer.setName("BUZZER");
+		buzzer.setPin(2);
+
+		
 		// Declaring states
 		State on = new State();
 		on.setName("on");
@@ -42,6 +47,15 @@ public class Switch {
 		// Binding actions to states
 		on.setActions(Arrays.asList(switchTheLightOn));
 		off.setActions(Arrays.asList(switchTheLightOff));
+
+		// Creating beforeState
+		BeforeState beforeState = new BeforeState();
+		List<BEEP> beeps = new ArrayList<BEEP>();
+		beeps.add(BEEP.SHORTBEEP);
+		beeps.add(BEEP.SHORTBEEP);
+		beeps.add(BEEP.SHORTBEEP);
+		beforeState.setBeeps(beeps);
+		beforeState.setActuator(buzzer);
 
 		// Creating transitions
 		Transition on2off = new Transition();
