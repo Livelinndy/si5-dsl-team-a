@@ -56,6 +56,23 @@ public class ToWiring extends Visitor<StringBuffer> {
 		}
 		w("}\n");
 
+		w("void shortBeep(int buzzer) {\n" +
+				"    for(int i = 0; i < 10; i++) {\n" +
+				"      digitalWrite(buzzer, HIGH);\n" +
+				"      delay(1);\n" +
+				"      digitalWrite(buzzer, LOW);\n" +
+				"      delay(1);\n" +
+				"    }\n" +
+				"}\n\n");
+		w("void longBeep(int buzzer) {\n" +
+				"    for(int i = 0; i < 160; i++) {\n" +
+				"      digitalWrite(buzzer, HIGH);\n" +
+				"      delay(2);\n" +
+				"      digitalWrite(buzzer, LOW);\n" +
+				"      delay(2);\n" +
+				"    }" +
+				"}\n\n");
+
 		w("\nvoid loop() {\n" +
 			"\tswitch(currentState){\n");
 		for(State state: app.getStates()){
@@ -124,7 +141,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 		if(context.get("pass") == PASS.TWO) {
 			w("\t\tcase " + state.getName() + ":\n");
 			BeforeState beforeState = state.getBeforeState();
-			if(beforeState != null){
+			if(beforeState != null && beforeState.getBeeps().size() > 0){
 				w(String.format("\t\tif( !enter%s ) {\n", state.getName()));
 				w(String.format("\t\t\tenter%s = true;\n", state.getName()));
 				beforeState.accept(this);

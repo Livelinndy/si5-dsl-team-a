@@ -7,9 +7,11 @@ import arduinoml.kernel.App;
 import arduinoml.kernel.behavioral.Action;
 import arduinoml.kernel.behavioral.Condition;
 import arduinoml.kernel.behavioral.State;
+import arduinoml.kernel.behavioral.BeforeState;
 import arduinoml.kernel.behavioral.Transition;
 import arduinoml.kernel.structural.Actuator;
 import arduinoml.kernel.structural.SIGNAL;
+import arduinoml.kernel.structural.BEEP;
 import arduinoml.kernel.structural.Sensor;
 
 import java.util.HashMap;
@@ -39,6 +41,7 @@ public class ModelBuilder extends ArduinomlBaseListener {
     private Map<String, Actuator> actuators = new HashMap<>();
     private Map<String, State>    states  = new HashMap<>();
     private Map<String, Binding>  bindings  = new HashMap<>();
+    // private Map<String, BeforeState> beforeStates = new HashMap<>();
 
     private class Binding { // used to support state resolution for transitions
         String to; // name of the next state, as its instance might not have been compiled yet
@@ -48,6 +51,9 @@ public class ModelBuilder extends ArduinomlBaseListener {
 
     private State currentState = null;
     private Binding currentBinding = null;
+    private BeforeState currentBeforeState = null;
+    // private
+
 
     /**************************
      ** Listening mechanisms **
@@ -55,6 +61,8 @@ public class ModelBuilder extends ArduinomlBaseListener {
 
     @Override
     public void enterRoot(ArduinomlParser.RootContext ctx) {
+        System.out.println("===>" + "coucou");
+
         built = false;
         theApp = new App();
     }
@@ -94,6 +102,10 @@ public class ModelBuilder extends ArduinomlBaseListener {
         actuator.setPin(Integer.parseInt(ctx.location().port.getText()));
         this.theApp.getBricks().add(actuator);
         actuators.put(actuator.getName(), actuator);
+
+        //BeforeState beforeState = new BeforeState();
+        //currentBeforeState.setActuator(actuator);
+        //beforeStates.put(actuator.getName(), beforeState);
     }
 
     @Override
@@ -102,12 +114,16 @@ public class ModelBuilder extends ArduinomlBaseListener {
         local.setName(ctx.name.getText());
         this.currentState = local;
         this.states.put(local.getName(), local);
+        this.currentBeforeState = new BeforeState();
+        System.out.println("===>" + "coucou");
     }
 
     @Override
     public void exitState(ArduinomlParser.StateContext ctx) {
+        this.currentState.setBeforeState(this.currentBeforeState);
         this.theApp.getStates().add(this.currentState);
         this.currentState = null;
+        this.currentBeforeState = null;
     }
 
     @Override
@@ -130,6 +146,23 @@ public class ModelBuilder extends ArduinomlBaseListener {
         condition.setValue(SIGNAL.valueOf(ctx.value.getText()));
         toBeResolvedLater.conditionList.add(condition);
         this.currentBinding = toBeResolvedLater;
+    }
+
+    @Override
+    public void enterBeep(ArduinomlParser.BeepContext ctx) {
+        BEEP beepType = ctx.type.getText().equals("longbeep") ? BEEP.LONGBEEP : BEEP.SHORTBEEP;
+        String beepQuantityString = ctx.quantity.getText();
+        int beepQuantity = beepQuantityString.equals("") ? 1 : Integer.parseInt(beepQuantityString);
+        String actuatorName = ctx.actuatorId.getText();
+        Actuator actuator = actuators.get(actuatorName);
+        System.out.println("===>" + beepType);
+
+        //BeforeState beforeState = new BeforeState();
+        currentBeforeState.setActuator(actuator);
+        while (beepQuantity > 0) {
+            currentBeforeState.getBeeps().add(beepType);
+            beepQuantity -= 1;
+        }
     }
 
     @Override
