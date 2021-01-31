@@ -5,6 +5,7 @@ import java.util.*;
 import groovy.lang.Binding;
 import arduinoml.kernel.App;
 import arduinoml.kernel.behavioral.Action;
+import arduinoml.kernel.behavioral.BeforeState;
 import arduinoml.kernel.behavioral.State;
 import arduinoml.kernel.behavioral.Transition;
 import arduinoml.kernel.behavioral.Condition;
@@ -13,6 +14,7 @@ import arduinoml.kernel.generator.Visitor;
 import arduinoml.kernel.structural.Actuator;
 import arduinoml.kernel.structural.Brick;
 import arduinoml.kernel.structural.SIGNAL;
+import arduinoml.kernel.structural.BEEP;
 import arduinoml.kernel.structural.Sensor;
 
 public class GroovuinoMLModel {
@@ -53,11 +55,19 @@ public class GroovuinoMLModel {
 		this.binding.setVariable(name, state);
 	}
 	
-	public void createTransition(State from, State to, List<Condition> conditions) {
+	public void createTransition(State from, State to, boolean isAND, List<Condition> conditions) {
 		Transition transition = new Transition();
 		transition.setNext(to);
+		transition.setIsLogicalAND(isAND);
 		transition.setConditions(conditions);
 		from.setTransition(transition);
+	}
+
+	public void createBeforeState(State state, Actuator actuator, List<BEEP> beeps) {
+		BeforeState beforeState = new BeforeState();
+		beforeState.setActuator(actuator);
+		beforeState.setBeeps(beeps);
+		state.setBeforeState(beforeState);
 	}
 	
 	public void setInitialState(State state) {
