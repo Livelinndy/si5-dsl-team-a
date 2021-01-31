@@ -12,11 +12,11 @@ declaration     :   'application' name=IDENTIFIER;
 bricks          :   (sensor|actuator)+;
     sensor      :   'sensor'   location ;
     actuator    :   'actuator' location ;
-    location    :   id=IDENTIFIER ':' port=PORT_NUMBER;
+    location    :   id=IDENTIFIER ':' port=DIGIT_NUMBER;
 
 states          :   state+;
     state       :   initial? name=IDENTIFIER '{'  beep* action+ transition '}';
-    beep        :   actuatorId=IDENTIFIER type=BEEP_TYPE quantity=NB_BEEPS;
+    beep        :   actuatorId=IDENTIFIER type=BEEP_TYPE quantity=DIGIT_NUMBER?;
     action      :   receiver=IDENTIFIER '<=' value=SIGNAL;
     transition  :   trigger=IDENTIFIER 'is' value=SIGNAL condition* '=>' next=IDENTIFIER ;
     condition   :   booleanOperator=BOOL trigger=IDENTIFIER 'is' value=SIGNAL ;
@@ -26,12 +26,13 @@ states          :   state+;
  ** Lexer rules **
  *****************/
 
-PORT_NUMBER     :   [1-9] | [1][0-3];
+DIGIT_NUMBER     :   [1-9] | [1][0-3];
 IDENTIFIER      :   LOWERCASE (LOWERCASE|UPPERCASE|NUMBER)+;
+BEEP_TYPE       :   'LONGBEEP' | 'SHORTBEEP';
+//NB_BEEPS        :   [1-9];
+
 SIGNAL          :   'HIGH' | 'LOW';
 BOOL            :   '&'    | '|';
-BEEP_TYPE       :   'longbeep' | 'shortbeep';
-NB_BEEPS        :   [1-9];
 
 /*************
  ** Helpers **

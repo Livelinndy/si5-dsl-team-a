@@ -61,8 +61,6 @@ public class ModelBuilder extends ArduinomlBaseListener {
 
     @Override
     public void enterRoot(ArduinomlParser.RootContext ctx) {
-        System.out.println("===>" + "coucou");
-
         built = false;
         theApp = new App();
     }
@@ -115,7 +113,6 @@ public class ModelBuilder extends ArduinomlBaseListener {
         this.currentState = local;
         this.states.put(local.getName(), local);
         this.currentBeforeState = new BeforeState();
-        System.out.println("===>" + "coucou");
     }
 
     @Override
@@ -150,14 +147,17 @@ public class ModelBuilder extends ArduinomlBaseListener {
 
     @Override
     public void enterBeep(ArduinomlParser.BeepContext ctx) {
-        BEEP beepType = ctx.type.getText().equals("longbeep") ? BEEP.LONGBEEP : BEEP.SHORTBEEP;
-        String beepQuantityString = ctx.quantity.getText();
-        int beepQuantity = beepQuantityString.equals("") ? 1 : Integer.parseInt(beepQuantityString);
+        BEEP beepType = ctx.type.getText().equals("LONGBEEP") ? BEEP.LONGBEEP : BEEP.SHORTBEEP;
+        String beepQuantityString = ctx.quantity != null ? ctx.quantity.getText() : "1";
+        int beepQuantity = Integer.parseInt(beepQuantityString);
         String actuatorName = ctx.actuatorId.getText();
         Actuator actuator = actuators.get(actuatorName);
-        System.out.println("===>" + beepType);
+        /* System.out.println(String.format(
+                "type=%s\nquantity=%s\n",
+                ctx.type.getText(),
+                beepQuantity));
+        System.out.println("===>" + beepType); */
 
-        //BeforeState beforeState = new BeforeState();
         currentBeforeState.setActuator(actuator);
         while (beepQuantity > 0) {
             currentBeforeState.getBeeps().add(beepType);
