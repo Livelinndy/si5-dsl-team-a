@@ -8,8 +8,8 @@ actuator buzzer: 2
 # Declaring states
 
 on {
-	longbeep 1
-	shortbeep 3
+	buzzer LONGBEEP 1
+	buzzer SHORTBEEP 3
     led <= LOW
 	buzzer <= HIGH
     button is HIGH => off
