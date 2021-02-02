@@ -16,7 +16,7 @@
 
 <initial>     ::= "->"
 
-<NUMBER> ::= <DIGIT> | [1][0-3]
+<NUMBER>      ::= <DIGIT> | [1][0-3]
 <IDENTIFIER>  ::= <LOWERCASE> ( <LOWERCASE> | <LOWERCASE> | <DIGIT> )+
 <SIGNAL>      ::= "HIGH" | "LOW"
 <BOOL>        ::= "&"    | "|"
