@@ -11,8 +11,7 @@
 <recursiveAction> ::= "and" <IDENTIFIER> "becomes" <SIGNAL>
 
 <before>          ::= "before" <IDENTIFIER> "with" <IDENTIFIER> "make" <beep>
-<beep>            ::= ( ""shortbeep"" | ""longbeep"" ) <recursiveBeep>*
-<recursiveBeep>   ::= "and" <beep>
+<beep>            ::= ( ""shortbeep"" | ""longbeep"" )
 
 <initial>         ::= "initial" <IDENTIFIER>
 
