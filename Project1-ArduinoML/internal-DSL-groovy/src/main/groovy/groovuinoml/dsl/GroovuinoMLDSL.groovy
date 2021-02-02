@@ -3,6 +3,7 @@ package main.groovy.groovuinoml.dsl
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer
 import arduinoml.kernel.structural.SIGNAL
+import arduinoml.kernel.structural.BEEP
 
 class GroovuinoMLDSL {
 	private GroovyShell shell
@@ -19,6 +20,8 @@ class GroovuinoMLDSL {
 		
 		binding.setVariable("high", SIGNAL.HIGH)
 		binding.setVariable("low", SIGNAL.LOW)
+		binding.setVariable("longbeep", BEEP.LONGBEEP)
+		binding.setVariable("shortbeep", BEEP.SHORTBEEP)
 	}
 	
 	private static CompilerConfiguration getDSLConfiguration() {

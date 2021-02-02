@@ -8,6 +8,7 @@ import arduinoml.kernel.behavioral.Condition
 import arduinoml.kernel.structural.Actuator
 import arduinoml.kernel.structural.Sensor
 import arduinoml.kernel.structural.SIGNAL
+import arduinoml.kernel.structural.BEEP
 
 abstract class GroovuinoMLBasescript extends Script {
 	// sensor "name" pin n
@@ -39,6 +40,22 @@ abstract class GroovuinoMLBasescript extends Script {
 		[means: closure]
 	}
 	
+	def before(state) {
+		[with: { actuator -> 
+			List<BEEP> beeps = new ArrayList<BEEP>()
+			((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().createBeforeState(
+				state instanceof String ? (State)((GroovuinoMLBinding)this.getBinding()).getVariable(state) : (State)state,
+				actuator instanceof String ? (Actuator)((GroovuinoMLBinding)this.getBinding()).getVariable(actuator) : (Actuator)actuator,
+				beeps)
+			def close
+			close = { beep ->
+				beeps.add(beep instanceof String ? (BEEP)((GroovuinoMLBinding)this.getBinding()).getVariable(beep) : (BEEP)beep)
+				[and: close]
+			}
+			[make: close]
+		}]
+	}
+	
 	// initial state
 	def initial(state) {
 		((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().setInitialState(state instanceof String ? (State)((GroovuinoMLBinding)this.getBinding()).getVariable(state) : (State)state)
@@ -47,25 +64,40 @@ abstract class GroovuinoMLBasescript extends Script {
 	// from state1 to state2 when sensor becomes signal
 	def from(state1) {
 		[to: { state2 -> 
+			boolean isLogicalAND = true;
+			State stateOne = state1 instanceof String ? (State)((GroovuinoMLBinding)this.getBinding()).getVariable(state1) : (State)state1
 			List<Condition> conditions = new ArrayList<Condition>()
 			((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().createTransition(
-				state1 instanceof String ? (State)((GroovuinoMLBinding)this.getBinding()).getVariable(state1) : (State)state1,
+				stateOne,
 				state2 instanceof String ? (State)((GroovuinoMLBinding)this.getBinding()).getVariable(state2) : (State)state2,
-				conditions) 	
-			def close
-			close = { sensor ->
+				isLogicalAND,
+				conditions)
+			def closeOR
+			def closeAND
+			closeAND = { sensor ->
 				[becomes: { signal -> 
+					stateOne.getTransition().setIsLogicalAND(true);
 					Condition condition = new Condition()
 					condition.setSensor(sensor instanceof String ? (Sensor)((GroovuinoMLBinding)this.getBinding()).getVariable(sensor) : (Sensor)sensor)
 					condition.setValue(signal instanceof String ? (SIGNAL)((GroovuinoMLBinding)this.getBinding()).getVariable(signal) : (SIGNAL)signal)
 					conditions.add(condition)
-					[and: close]
+					[and: closeAND, or: closeOR]
 				}]
 			}
-			[when: close]
+			closeOR = { sensor ->
+				[becomes: { signal -> 
+					stateOne.getTransition().setIsLogicalAND(false);
+					Condition condition = new Condition()
+					condition.setSensor(sensor instanceof String ? (Sensor)((GroovuinoMLBinding)this.getBinding()).getVariable(sensor) : (Sensor)sensor)
+					condition.setValue(signal instanceof String ? (SIGNAL)((GroovuinoMLBinding)this.getBinding()).getVariable(signal) : (SIGNAL)signal)
+					conditions.add(condition)
+					[and: closeAND, or: closeOR]
+				}]
+			}
+			[when: closeAND]
 		}]
 	}
-	
+
 	// export name
 	def export(String name) {
 		println(((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().generateCode(name).toString())

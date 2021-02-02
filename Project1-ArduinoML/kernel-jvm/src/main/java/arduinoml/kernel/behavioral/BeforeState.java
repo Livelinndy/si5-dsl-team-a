@@ -11,7 +11,7 @@ import java.util.List;
 public class BeforeState implements Visitable {
 
 	private List<BEEP> beeps = new ArrayList<BEEP>();
-	private Actuator actuator;
+	private Actuator actuator = null;
 
 
 	public List<BEEP> getBeeps() {

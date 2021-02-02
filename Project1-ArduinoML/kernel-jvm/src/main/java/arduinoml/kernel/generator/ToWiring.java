@@ -56,6 +56,23 @@ public class ToWiring extends Visitor<StringBuffer> {
 		}
 		w("}\n");
 
+		w("void shortBeep(int buzzer) {\n" +
+				"    for(int i = 0; i < 100; i++) {\n" +
+				"      digitalWrite(buzzer, HIGH);\n" +
+				"      delay(1);\n" +
+				"      digitalWrite(buzzer, LOW);\n" +
+				"      delay(1);\n" +
+				"    }\n" +
+				"}\n\n");
+		w("void longBeep(int buzzer) {\n" +
+				"    for(int i = 0; i < 160; i++) {\n" +
+				"      digitalWrite(buzzer, HIGH);\n" +
+				"      delay(2);\n" +
+				"      digitalWrite(buzzer, LOW);\n" +
+				"      delay(2);\n" +
+				"    }\n" +
+				"}\n\n");
+
 		w("\nvoid loop() {\n" +
 			"\tswitch(currentState){\n");
 		for(State state: app.getStates()){
@@ -99,18 +116,20 @@ public class ToWiring extends Visitor<StringBuffer> {
 		if(context.get("pass") == PASS.TWO){
 			String step = "";
 			for(BEEP beep : beforeState.getBeeps()){
-				w(String.format("\t\t\t%s\n", step));
-				w(String.format("\t\t\tdigitalWrite(%s, HIGH);\n", beforeState.getActuator().getName()));
+				w(String.format("\t\t\t\t%s\n", step));
+				// w(String.format("\t\t\t\tdigitalWrite(%s, HIGH);\n", beforeState.getActuator().getName()));
 				if( beep == BEEP.LONGBEEP ){
-					w("\t\t\tdelay(1500);\n");
+					// w("\t\t\t\tdelay(1500);\n");
+					w(String.format("\t\t\t\tlongBeep(%s);\n", beforeState.getActuator().getName()));
 				}
 				else if( beep == BEEP.SHORTBEEP ){
-					w("\t\t\tdelay(500);\n");
+					// w("\t\t\t\tdelay(500);\n");
+					w(String.format("\t\t\t\tshortBeep(%s);\n", beforeState.getActuator().getName()));
 				}
-				w(String.format("\t\t\tdigitalWrite(%s, LOW);\n", beforeState.getActuator().getName()));
+				// w(String.format("\t\t\t\tdigitalWrite(%s, LOW);\n", beforeState.getActuator().getName()));
 				step = "delay(500);";
 			}
-			w("\t\t}\n");
+			w("\t\t\t}\n");
 			return;
 		}
 	}
@@ -124,9 +143,9 @@ public class ToWiring extends Visitor<StringBuffer> {
 		if(context.get("pass") == PASS.TWO) {
 			w("\t\tcase " + state.getName() + ":\n");
 			BeforeState beforeState = state.getBeforeState();
-			if(beforeState != null){
-				w(String.format("\t\tif( !enter%s ) {\n", state.getName()));
-				w(String.format("\t\t\tenter%s = true;\n", state.getName()));
+			if(beforeState != null && beforeState.getBeeps().size() > 0){
+				w(String.format("\t\t\tif( !enter%s ) {\n", state.getName()));
+				w(String.format("\t\t\t\tenter%s = true;\n", state.getName()));
 				beforeState.accept(this);
 			}
 			for (Action action : state.getActions()) {
