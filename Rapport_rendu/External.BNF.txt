@@ -5,25 +5,26 @@
 <bricks>      ::= ( <sensor> | <actuator> )+
 <sensor>      ::= "sensor" <location>
 <actuator>    ::= "actuator" <location>
-<location>    ::= <IDENTIFIER> ":" <PORT_NUMBER>
+<location>    ::= <IDENTIFIER> ":" <NUMBER>
 
 <states>      ::= <state>+
 <state>       ::= <initial>? <IDENTIFIER> "{"  <beep>* <action>+ <transition> "}"
-<beep>        ::= <IDENTIFIER> <BEEP_TYPE> <NB_BEEPS>
+<beep>        ::= <IDENTIFIER> <BEEP_TYPE> <NUMBER>
 <action>      ::= <IDENTIFIER> "<=" <SIGNAL>
 <transition>  ::= <IDENTIFIER> "is" <SIGNAL> <condition>* "=>" <IDENTIFIER>
 <condition>   ::= <BOOL> <IDENTIFIER> "is" <SIGNAL>
 
 <initial>     ::= "->"
 
-<PORT_NUMBER> ::= <DIGIT> | [1][0-3]
+<NUMBER> ::= <DIGIT> | [1][0-3]
 <IDENTIFIER>  ::= <LOWERCASE> ( <LOWERCASE> | <LOWERCASE> | <DIGIT> )+
 <SIGNAL>      ::= "HIGH" | "LOW"
 <BOOL>        ::= "&"    | "|"
-<BEEP_TYPE>   ::= "longbeep" | "shortbeep"
-<NB_BEEPS>    ::= <DIGIT>?
+<BEEP_TYPE>   ::= "LONGBEEP" | "SHORTBEEP"
+
 <LOWERCASE>   ::= [a-z]
 <UPPERCASE>   ::= [A-Z]
 <DIGIT>       ::= [0-9]
 <NEWLINE>     ::= ("\r"? "\n" | "\r")+      -> skip
 <WHITESPACE>  ::= ((" " | "\t")+)           -> skip
+<COMMENT>     ::= '#' ~( '\r' | '\n' )*     -> skip
