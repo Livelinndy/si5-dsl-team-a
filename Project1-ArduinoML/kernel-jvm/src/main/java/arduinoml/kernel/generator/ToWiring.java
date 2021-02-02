@@ -57,7 +57,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 		w("}\n");
 
 		w("void shortBeep(int buzzer) {\n" +
-				"    for(int i = 0; i < 10; i++) {\n" +
+				"    for(int i = 0; i < 100; i++) {\n" +
 				"      digitalWrite(buzzer, HIGH);\n" +
 				"      delay(1);\n" +
 				"      digitalWrite(buzzer, LOW);\n" +
