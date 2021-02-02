@@ -11,7 +11,7 @@
 <recursiveAction> ::= "and" <IDENTIFIER> "becomes" <SIGNAL>
 
 <before>          ::= "before" <IDENTIFIER> "with" <IDENTIFIER> "make" <beep>
-<beep>            ::= ( "SHORTBEEP" | "LONGBEEP" ) <recursiveBeep>*
+<beep>            ::= ( ""shortbeep"" | ""longbeep"" ) <recursiveBeep>*
 <recursiveBeep>   ::= "and" <beep>
 
 <initial>         ::= "initial" <IDENTIFIER>
@@ -23,8 +23,8 @@
 <export>          ::= "export" <IDENTIFIER>
 
 <PORT_NUMBER>     ::= <DIGIT>[1-2]?
-<IDENTIFIER>      ::= <LOWERCASE> ( <LOWERCASE> | <LOWERCASE> | <DIGIT> )+
-<SIGNAL>          ::= "high" | "low"
+<IDENTIFIER>      ::= """ <LOWERCASE> ( <LOWERCASE> | <LOWERCASE> | <DIGIT> )+ """
+<SIGNAL>          ::= ""high"" | ""low""
 <LOWERCASE>       ::= [a-z]
 <UPPERCASE>       ::= [A-Z]
 <DIGIT>           ::= [0-9]
