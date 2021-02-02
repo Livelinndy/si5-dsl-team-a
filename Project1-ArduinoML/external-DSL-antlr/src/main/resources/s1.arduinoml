@@ -9,7 +9,7 @@ actuator buzzer: 2
 on {
     led <= HIGH
 	buzzer <= HIGH
-    button is HIGH => off
+    button is LOW => off
 }
 
 -> off {
