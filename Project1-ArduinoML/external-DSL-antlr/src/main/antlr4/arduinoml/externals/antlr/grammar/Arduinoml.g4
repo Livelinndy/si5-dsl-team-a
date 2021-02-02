@@ -14,7 +14,7 @@ bricks          :   (sensor|actuator)+;
     location    :   id=IDENTIFIER ':' port=NUMBER;
 
 states          :   state+;
-    state       :   initial? name=IDENTIFIER '{'  beep* action+ transition '}';
+    state       :   initial? name=IDENTIFIER '{'  beep action+ transition '}';
     beep        :   actuatorId=IDENTIFIER type=BEEP_TYPE quantity=NUMBER?;
     action      :   receiver=IDENTIFIER '<=' value=SIGNAL;
     transition  :   trigger=IDENTIFIER 'is' value=SIGNAL condition* '=>' next=IDENTIFIER ;
