@@ -8,7 +8,7 @@
 <location>    ::= <IDENTIFIER> ":" <NUMBER>
 
 <states>      ::= <state>+
-<state>       ::= <initial>? <IDENTIFIER> "{"  <beep>* <action>+ <transition> "}"
+<state>       ::= <initial>? <IDENTIFIER> "{"  <beep>? <action>+ <transition> "}"
 <beep>        ::= <IDENTIFIER> <BEEP_TYPE> <NUMBER>
 <action>      ::= <IDENTIFIER> "<=" <SIGNAL>
 <transition>  ::= <IDENTIFIER> "is" <SIGNAL> <condition>* "=>" <IDENTIFIER>
