@@ -1,0 +1,33 @@
+// Scenario 1
+
+clip c1 color #fff background during 10s 
+add title "Bob and Alice went on holiday together" to c1
+clip c2 is "clip1.mp4"
+clip c3 is "clip2.mp4"
+clip c4 color #fff background during 15s // commentaire
+add title "thanks" to c4
+concat c1 and c2 and c3 and c4 to cf
+export cf in "newname.mp4"
+
+// Scenario 2
+
+clip c1 color #fff background during 10s
+clip clip1a is "clip1.mp4" from 23s to 1m47s
+clip clip1b is "clip1.mp4" from 2m1s to 2m21s
+add subtitle "Oh ! mon dieu !" to clip1a at beginning during 10s
+add subtitle "Oui monsieur !" color #f0f font size 20px to clip1a at 40s during 10s
+add subtitle "Oh" to clip1b at -5s during 15s
+clip c4 color #fff background
+add title "thanks" to c4
+concat c1 and clip1a and clip1b and c4 to cf
+export cf in "newname.mp4"
+
+// Scenario 3
+
+clip c1 is "mecommenting.mp4"
+clip c2 is "mainvideo0.mp4"
+clip c3 is "mainvideo1.mp4"
+clip c4 is "mainvideo2.mp4"
+concat c2 and c3 and c4 transition fade to cf
+add clip c1 on bottom right scale 0.3 to cf
+export cf in "newname.mp4"
