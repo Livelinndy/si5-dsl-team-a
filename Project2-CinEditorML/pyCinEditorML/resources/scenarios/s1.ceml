@@ -1,0 +1,8 @@
+clip c1 color #fff background during 10s 
+add title "Bob and Alice went on holiday together" to c1
+clip c2 is "clip1.mp4"
+clip c3 is "clip2.mp4"
+clip c4 color #fff background during 15s
+add title "thanks" to c4
+concat c1 and c2 and c3 and c4 to cf
+export cf as "newname.mp4"

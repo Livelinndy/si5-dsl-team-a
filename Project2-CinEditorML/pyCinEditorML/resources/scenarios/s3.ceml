@@ -1,0 +1,7 @@
+clip c1 is "mecommenting.mp4"
+clip c2 is "mainvideo0.mp4"
+clip c3 is "mainvideo1.mp4"
+clip c4 is "mainvideo2.mp4"
+concat c2 and c3 and c4 with transition fade to cf
+add clip c1 on bottom right scale 0.3 to cf
+export cf as "newname.mp4"

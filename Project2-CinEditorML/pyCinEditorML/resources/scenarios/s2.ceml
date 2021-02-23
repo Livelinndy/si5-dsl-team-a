@@ -1,0 +1,10 @@
+clip c1 color #fff background during 10s
+clip clip1a is "clip1.mp4" from 23s to 1m47s
+clip clip1b is "clip1.mp4" from 2m1s to 2m21s
+add subtitle "Oh ! mon dieu !" to clip1a during 10s
+add subtitle "Oui monsieur !" color #f0f fontsize 20px to clip1a at 40s during 10s
+add subtitle "Oh" to clip1b at -5s during 15s
+clip c4 color #fff background
+add title "thanks" to c4
+concat c1 and clip1a and clip1b and c4 to cf
+export cf as "newname.mp4"
