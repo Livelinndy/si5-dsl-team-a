@@ -9,6 +9,7 @@ class Clip(abc.ABC):
 	def __init__(self, name, startTime, duration, endTime):
 		self.timeDuration = Temporal(startTime, duration, endTime)
 		self.name = name
+		self.content = None
 
 	@abc.abstractmethod
 	def declare(self):
@@ -20,8 +21,8 @@ class Video(Clip):
 	A video
 	"""
 	def __init__(self, name, path, startTime, duration, endTime):
-		self.path = path
 		super().__init__(self, name, startTime, duration, endTime)
+		self.path = path
 		# set 
 
 	def declare(self):
@@ -39,3 +40,10 @@ class Blank(Clip):
 	def declare(self):
 		"""create background"""
 		return
+
+class Concat(Clip):
+	"""
+	A clip made with other clips
+	"""
+	def __init__(self, name, clipList):
+		super().__init__(name, '0s', duration, endTime)
