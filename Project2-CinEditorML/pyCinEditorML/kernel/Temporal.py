@@ -1,5 +1,4 @@
-
-import pyCinEditorML.kernel.Utils
+from pyCinEditorML.kernel.Utils import *
 
 class Temporal:
 	"""

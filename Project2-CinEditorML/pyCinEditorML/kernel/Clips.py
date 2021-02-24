@@ -6,8 +6,8 @@ class Clip(abc.ABC):
 	"""
 	Abstraction for clips
 	"""
-	def __init__(self, name, startTime, duration, endTime):
-		self.timeDuration = Temporal(startTime, duration, endTime)
+	def __init__(self, name, temporal):
+		self.temporat = temporal
 		self.name = name
 		self.content = None
 
@@ -20,8 +20,8 @@ class Video(Clip):
 	"""
 	A video
 	"""
-	def __init__(self, name, path, startTime, duration, endTime):
-		super().__init__(self, name, startTime, duration, endTime)
+	def __init__(self, name, temporal, path):
+		super().__init__(self, name, temporal)
 		self.path = path
 		# set 
 
@@ -33,8 +33,8 @@ class Blank(Clip):
 	"""
 	An empty clip
 	"""
-	def __init__(self, name, color = 'black', startTime = '0s', duration = '15s', endTime = None): # by default the background is black
-		super().__init__(self, name, startTime, duration, endTime)
+	def __init__(self, name, temporal, color = 'black'): # by default the background is black
+		super().__init__(self, name, temporal)
 		self.color = color
 
 	def declare(self):
@@ -45,5 +45,5 @@ class Concat(Clip):
 	"""
 	A clip made with other clips
 	"""
-	def __init__(self, name, clipList):
-		super().__init__(name, '0s', duration, endTime)
+	def __init__(self, name, clipList, temporal):
+		super().__init__(name, temporal)

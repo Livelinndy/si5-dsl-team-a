@@ -23,7 +23,7 @@ def timeBetween(startTime, endTime):
 		raise Exception("Cannot set end time before start time")
 	return start - end
 
-def hex_to_rgb(value):
+def hexToRgb(value):
 	value = value.lstrip('#')
 	finalValue = value
 	if len(value) == 3:
