@@ -15,4 +15,11 @@ def timeToSeconds(timeStr):
         return res
     else:
         raise Exception("timeStr doesn't match the pattern")
+
+def timeBetween(startTime, endTime):
+    start = timeToSeconds(startTime)
+    end = timeToSeconds(endTime)
+    if end < start:
+        raise Exception("Cannot set end time before start time")
+    return start - end
         

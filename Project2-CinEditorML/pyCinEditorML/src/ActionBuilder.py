@@ -16,12 +16,12 @@ class ActionBuilder:
 
     def __init__(self, root, kind, clip):
         self.root = root
-		self.kind = kind
-		self.clip = clip
+        self.kind = kind
+        self.clip = clip
         self.text = None  # string, text for ADD_TEXT, ADD_TITLE or ADD_SUBTITLE
-		self.textSize = None # int, textsize for ADD_TEXT
-		self.horizontalPosition = None # string "left", "center" or "right" for ADD_TEXT
-		self.verticalPosition = None # string "top", "center" of "bottom" for ADD_TEXT
+        self.textSize = None # int, textsize for ADD_TEXT
+        self.horizontalPosition = None # string "left", "center" or "right" for ADD_TEXT
+        self.verticalPosition = None # string "top", "center" of "bottom" for ADD_TEXT
 
     def on_text(self, text):
         self.text = text
@@ -37,8 +37,8 @@ class ActionBuilder:
             return AddText(self.name, self.clip, self.text)
         if self.kind == ADD_TITLE:
             return AddTitle(self.name, self.clip, self.text)
-		if self.kind == ADD_SUBTITLE:
+        if self.kind == ADD_SUBTITLE:
 			return AddSubitle(self.name, self.clip, self.text)
-		if self.kind == EXPORT:
+        if self.kind == EXPORT:
 			return Export(self.name, self.clip)
         return None

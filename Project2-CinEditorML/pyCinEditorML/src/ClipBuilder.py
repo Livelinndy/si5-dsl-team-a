@@ -20,8 +20,8 @@ class ClipBuilder:
         self.name = name
         self.kind = kind
         self.path = None  # string, path for VIDEO
-		self.duration = None # duration for BLANK
-		self.color = None # string, background color for BLANK
+        self.duration = None # duration for BLANK
+        self.color = None # string, background color for BLANK
 
     def on_color(self, color):
         self.color = color
