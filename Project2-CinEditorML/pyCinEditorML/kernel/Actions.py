@@ -1,4 +1,9 @@
+import sys
 import abc
+import moviepy.editor as mp
+import os
+sys.path.append('../')
+from kernel.App import App
 
 # pas encore complet
 
@@ -11,11 +16,8 @@ class Action(abc.ABC):
 		
 	@abc.abstractmethod
 	def execute(self):
-		"""execute action"""
 		pass
 
-		
-		
 class AddText(Action):
 	def __init__(self, clip):
 		self.clip = clip
@@ -43,14 +45,14 @@ class AddSubtitle(AddText):
 
 		
 class Concatenate(Action):
-	def __init__(self, clip):
-		self.clip = clip
-		
+	def __init__(self, clips):
+		self.clips = clips
+
 	def execute(self):
-		"""execute action"""
-		return
+		return mp.concatenate_videoclips(self.clips)
 		
 class ConcatenateWithTransition(Action):
+	# need to add transition argument in constructor
 	def __init__(self, clip):
 		self.clip = clip
 		
@@ -91,9 +93,11 @@ class Superpose(Action):
 		
 		
 class Export(Action):
-	def __init__(self, clip):
+	def __init__(self, clip, filename='a.out.mp4', fps=30):
 		self.clip = clip
+		self.filename = filename
+		self.fps = fps
 		
 	def execute(self):
-		"""execute action"""
-		return
+		return self.clip.content.write_videofile(
+			os.path.join('../output', self.filename), self.fps)

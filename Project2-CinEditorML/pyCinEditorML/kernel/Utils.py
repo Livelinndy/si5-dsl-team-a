@@ -21,7 +21,7 @@ def timeBetween(startTime, endTime):
 	end = timeToSeconds(endTime)
 	if end < start:
 		raise Exception("Cannot set end time before start time")
-	return start - end
+	return end - start
 
 def hexToRgb(value):
 	value = value.lstrip('#')

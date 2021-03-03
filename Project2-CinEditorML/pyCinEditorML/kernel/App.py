@@ -1,9 +1,16 @@
 class App:
 
-	def __init__(self, name, clips=(), actions=()):
+	def __init__(self, name, clips=(), actions=(), clipFinal=None):
 		self.name = name # app name
 		self.clips = clips
 		self.actions = actions
+		self.clipFinal = clipFinal
+
+	def get_clipFinal(self):
+		return self.clipFinal
+
+	def set_clipFinal(self, clipFinal):
+		self.clipFinal = clipFinal
 
 	def __repr__(self):
 		"""

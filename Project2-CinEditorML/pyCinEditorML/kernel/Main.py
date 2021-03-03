@@ -12,15 +12,18 @@ def demo():
 	from kernel.Utils import timeToSeconds
 	from kernel.Temporal import Temporal
 
-	clip1 = Video(
-		"c1",
-		Temporal('0s', 14, None),
-		"../resources/videos/frogs.mp4")
-	print(clip1.get_temporal())
+	app = App('main')
+	frogs_video = Video(
+		'frogs_video',
+		Temporal('40s', 0, '46s'),
+		'frogs.mp4')
+	print(frogs_video.temporal)
+	Export(frogs_video, 'output_frogs.mp4', 30).execute()
 
-	clipColor = Blank("black_clip", Temporal('1m35s', 14), "#fff")
-	print(clipColor.get_temporal())
+	# clipColor = Blank("black_clip", Temporal('1m35s', 14), "#fff")
+	# print(clipColor.get_temporal())
 	# todo
+
 
 if __name__ == '__main__':
 	demo()
