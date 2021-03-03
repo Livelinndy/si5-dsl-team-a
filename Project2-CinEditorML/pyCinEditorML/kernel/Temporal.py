@@ -1,5 +1,7 @@
-from pyCinEditorML.kernel.Utils import *
+# from Utils import *
 
+
+from pyCinEditor.kernel.Utils import *
 class Temporal:
 	"""
 	time linked to clips
@@ -10,3 +12,10 @@ class Temporal:
 			self.duration = timeBetween(startTime, endTime)
 		else:
 			self.duration = duration
+
+	def get_duration(self):
+		return self.duration
+
+	def __str__(self):
+		return str(self.temporalPosition) + '\n' \
+			+ str(self.duration)

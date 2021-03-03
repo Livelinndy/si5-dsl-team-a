@@ -1,7 +1,8 @@
 #!/usr/bin/python
 import re
 import sys
-#from pyCinEditorML.src.AppBuilder import AppBuilder
+# from kernel import *
+from pyCinEditorML.src.AppBuilder import AppBuilder
 
 """
 DSL version of the demo application
@@ -11,10 +12,13 @@ Where "test1" is the name of a .ceml script from the resources folder
 
 # pas encore lie avec AppBuilder
 
+# temporal = Temporal('1m55s', 40, 'black')
+print(temporal)
+
 if len(sys.argv) > 1:
 	file = open('../resources/scenarios/' + sys.argv[1] + '.ceml')
 	text = file.read()
- 	finalArray = []
+	finalArray = []
 	tmp = []
 	array = re.split('\n+', text)
 	for i in array:
