@@ -1,7 +1,7 @@
-# from Utils import *
+import sys
+sys.path.append('../')
+from kernel.Utils import *
 
-
-from pyCinEditor.kernel.Utils import *
 class Temporal:
 	"""
 	time linked to clips

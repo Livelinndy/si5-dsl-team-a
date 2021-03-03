@@ -1,11 +1,14 @@
+import sys
 import abc
+sys.path.append('../')
+
 # import Utils
 # import moviepy.editor as mp
 # from Utils import hexToRgb
 # from Temporal import Temporal
 
-import pyCinEditorML.kernel.Utils
-from pyCinEditorML.kernel.Temporal import Temporal
+from kernel.Utils import *
+from kernel.Temporal import Temporal
 
 
 class Clip(abc.ABC):
