@@ -1,7 +1,13 @@
+import sys
 import abc
+import os
+sys.path.append('../')
+
 import moviepy.editor as mp
 from moviepy.config import change_settings
 change_settings({"IMAGEMAGICK_BINARY": r"C:\\Program Files\\ImageMagick-7.0.11-Q16\\magick.exe"})
+
+from kernel.App import App
 
 # pas encore complet
 
@@ -14,11 +20,8 @@ class Action(abc.ABC):
 		
 	@abc.abstractmethod
 	def execute(self):
-		"""execute action"""
 		pass
 
-		
-		
 class AddText(Action):
 	def __init__(self, clip, text, color = 'red', pos_x = 'center', pos_y = 'center'):
 		self.clip = clip
@@ -37,14 +40,14 @@ class AddText(Action):
 
 		
 class Concatenate(Action):
-	def __init__(self, clip):
-		self.clip = clip
-		
+	def __init__(self, clips):
+		self.clips = clips
+
 	def execute(self):
-		"""execute action"""
-		return
+		return mp.concatenate_videoclips(self.clips)
 		
 class ConcatenateWithTransition(Action):
+	# need to add transition argument in constructor
 	def __init__(self, clip):
 		self.clip = clip
 		
@@ -85,9 +88,11 @@ class Superpose(Action):
 		
 		
 class Export(Action):
-	def __init__(self, clip):
+	def __init__(self, clip, filename='a.out.mp4', fps=30):
 		self.clip = clip
+		self.filename = filename
+		self.fps = fps
 		
 	def execute(self):
-		"""execute action"""
-		return
+		return self.clip.content.write_videofile(
+			os.path.join('../output', self.filename), self.fps)

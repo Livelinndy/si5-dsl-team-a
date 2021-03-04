@@ -1,7 +1,13 @@
 #!/usr/bin/python
 import re
 import sys
-#from pyCinEditorML.src.AppBuilder import AppBuilder
+sys.path.append('../')
+from kernel.App import App
+from kernel.Clips import Video, Blank
+from kernel.Actions import Action, AddText, AddTitle, AddSubtitle, \
+	Concatenate, ConcatenateWithTransition, Cut, SetColor, Superpose, Export
+from kernel.Utils import timeToSeconds
+from kernel.Temporal import Temporal
 
 """
 DSL version of the demo application
@@ -11,10 +17,14 @@ Where "test1" is the name of a .ceml script from the resources folder
 
 # pas encore lie avec AppBuilder
 
+### TESTS import
+# temporal = Temporal('1m55s', 40)
+# print(temporal)
+
 if len(sys.argv) > 1:
 	file = open('../resources/scenarios/' + sys.argv[1] + '.ceml')
 	text = file.read()
- 	finalArray = []
+	finalArray = []
 	tmp = []
 	array = re.split('\n+', text)
 	for i in array:
