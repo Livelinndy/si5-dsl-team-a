@@ -30,12 +30,15 @@ def process(line):
 	end = None
 	title_text = None
 	clip_name = None
+	transition = None
 	regexes = {
 		'import_video_with_time': re.compile(
 			'clip\s+(?P<clip_name>[a-zA-Z0-9]+)\s+is\s+"(?P<filename>[^"]+)"\s+from\s+(?P<begin>[0-9]*h?[0-9]*m?[0-9]+s)\s+to\s+(?P<end>[0-9]*h?[0-9]*m?[0-9]+s)'),
 		'import_video': re.compile('clip\s+(?P<clip_name>[a-zA-Z0-9]+)\s+is\s+"(?P<filename>[^"]+)"'),
 		'add_title': re.compile('add\s+title\s+"(?P<title_text>[^"]+)"\s+to\s+(?P<clip_name>[a-zA-Z0-9]+)'),
 
+		'concat_with_transition': re.compile(
+			'concat\s+(?P<clips>.+)\s+with\s+transition\s+(?P<transition>[a-zA-Z0-9]+)\s+to\s+(?P<clip_final_name>[a-zA-Z0-9]+)'),
 		'concat': re.compile('concat\s+(?P<clips>.+)\s+to\s+(?P<clip_final_name>[a-zA-Z0-9]+)'),
 		'export': re.compile('export\s+(?P<clip_name>[a-zA-Z0-9]+)\s+as\s+"(?P<filename>[^"]+)"')
 	}
@@ -46,21 +49,21 @@ def process(line):
 			regex_key = key
 			break
 
-	# if regex_key:
-	# match = regexes[regex_key].match(line)
-
 	if regex_key == 'import_video' or regex_key == 'export':
 		clip_name = match.group('clip_name')
 		filename = match.group('filename')
 		print(clip_name + ' ' + filename)
 
-	if regex_key == 'concat':
+	if regex_key == 'concat' or regex_key == 'concat_with_transition':
 		clips_str = match.group('clips')
 		clip_name = match.group('clip_final_name')
 		if len(clips_str) > 0:
 			clips_str = re.split('\s+and\s+', clips_str)
 		for i in clips_str:
 			print(i, end=' ')
+		if regex_key == 'concat_with_transition':
+			transition = match.group('transition')
+			print('| ' + transition, end=' ')
 		print('| ' + clip_name)
 
 	if regex_key == 'import_video_with_time':
