@@ -2,14 +2,16 @@ import sys
 import abc
 import os
 sys.path.append('../')
-
 import moviepy.editor as mp
 from moviepy.config import change_settings
-change_settings({"IMAGEMAGICK_BINARY": r"C:\\Program Files\\ImageMagick-7.0.11-Q16\\magick.exe"})
 
-from kernel.App import App
+if sys.platform != 'linux':
+	change_settings({"IMAGEMAGICK_BINARY": r"C:\\Program Files\\ImageMagick-7.0.11-Q16\\magick.exe"})
+else:
+	change_settings({"IMAGEMAGICK_BINARY": r"/usr/bin/magick"})
 
-# pas encore complet
+from kernel.Clips import *
+
 
 
 class Action(abc.ABC): # Abstraction for actions on clips	

@@ -10,7 +10,6 @@ from kernel.Actions import Action, AddText, Concatenate, \
 	ConcatenateWithTransition, Cut, Superpose, Export
 
 from kernel.Utils import timeToSeconds
-from kernel.Temporal import Temporal
 
 def test():
 	app = App('main')
@@ -18,12 +17,15 @@ def test():
 		'frogs_video',
 		Temporal('40s', 0, '46s'),
 		'frogs.mp4')"""
-	# 13s
+
 	iphone_video = Video('iphone_video', Temporal('27s', 24, '37s'), 'iphone7.mp4')
-	mario_video = Video('mario_video', Temporal('0s', 3, '3s'), 'hotel_mario.mp4')
-	final_video = ConcatenateWithTransition([iphone_video, mario_video])\
-		.concatenateWithFadeTransition()
+	intro_video = Blank('blank_video', Temporal('0s', 5, '5s'), '#000')
+	intro_video = AddText(intro_video, 'An Iphone Video', 2, 3).execute()
+	# mario_video = Video('mario_video', Temporal('0s', 3, '3s'), 'hotel_mario.mp4')
+	# final_video = ConcatenateWithTransition([iphone_video, mario_video])\
+	# .concatenateWithFadeTransition()
 	# final_video = Concatenate([iphone_video, mario_video]).execute()
+	final_video = ConcatenateWithTransition([intro_video, iphone_video]).concatenateWithFadeTransition()
 	Export(final_video, 'final_output.mp4').execute()
 
 	# clipColor = Blank("black_clip", Temporal('1m35s', 14), "#fff")
@@ -43,7 +45,7 @@ def scenario1():
 	t2.content = AddText(t2, 10, 'thanks').execute()
 	concat_content = Concatenate([t1, v1, v2, t2]).execute()
 	# (e) export the result as a video file
-	Export(concat_content, 'scenario1.mp4').execute()
+	Export(concat_content, 's1_kernel.mp4').execute()
 	
 
 if __name__ == '__main__':

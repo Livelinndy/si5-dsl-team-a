@@ -39,6 +39,3 @@ class Blank(Clip): # An empty clip with colored background
 		self.duration = timeToSeconds(duration_str)
 		self.background_color = hexToRgb(background_color) if background_color.startswith('#') else background_color
 		super().set_content(mp.ColorClip(size = DEFAULT_VIDEO_SIZE, color = self.background_color, duration = self.duration))
-
-
-
