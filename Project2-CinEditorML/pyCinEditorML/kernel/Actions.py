@@ -27,30 +27,33 @@ class Action(abc.ABC):
 
 
 class AddText(Action):
-	def __init__(self, clip, text, color='red', font_size=20, pos_x='center', pos_y='center'):
+	def __init__(self, clip, text, start, duration, color='red', font_size=20, pos_x='center', pos_y='center'):
 		self.clip = clip
 		self.text = text
 		self.color = color
 		self.font_size = font_size
 		self.pos_x = pos_x
 		self.pos_y = pos_y
+		self.start = start
+		self.duration = duration
 		
 	def execute(self):
 		"""add text to clip, return final clip"""
 		tc = mp.TextClip(self.text, fontsize=self.font_size, stroke_color=self.color, stroke_width=1.5)
-		tc = tc.set_pos('center').set_duration(9)
+		tc = tc.set_pos('center').set_duration(5)
+		tc = tc.set_duration(self.duration).set_start(self.start)
 		return mp.CompositeVideoClip([self.clip.content, tc])
 
 
 class Concatenate(Action):
 	def __init__(self, clips):
-		#for i in clips:
-		#	print(str(i))
-		self.clips = list(map(lambda v: v.get_content(), clips))
+		def take_content(v):
+			if type(v) is Video or type(v) is Blank:
+				return v.get_content()
+			return v
+		self.clips = list(map(take_content, clips))
 
 	def execute(self):
-		# for i in self.clips:
-		#	print(i)
 		return mp.concatenate_videoclips(self.clips)
 
 
@@ -61,7 +64,13 @@ SLIDE = 1
 
 class ConcatenateWithTransition(Action):
 	def __init__(self, clips, transition=FADE):
-		self.clips = list(map(lambda v: v.get_content(), clips))
+		def take_content(v):
+			if type(v) is Video or type(v) is Blank:
+				return v.get_content()
+			return v
+		for i in clips:
+			print(i)
+		self.clips = list(map(take_content, clips))
 		# self.durations = list(map(lambda v: v.duration, clips))
 		self.transition = transition
 		
@@ -96,7 +105,8 @@ class Cut(Action):
 	def execute(self):
 		"""cut clip, returns final clip"""
 		return self.clip.subclip(self.from_sec, self.to_sec)
-		
+
+
 class Superpose(Action):
 	def __init__(self, main_clip, side_clip, pos_x='right', pos_y='bottom', ratio=0.30):
 		self.main_clip = main_clip
@@ -117,8 +127,6 @@ class Export(Action):
 		self.fps = fps
 		
 	def execute(self):
-		# print(type(self.clip))
-		# print(type(self.clip) is Video)
 		if type(self.clip) is Video or type(self.clip) is Blank:
 			return self.clip.content.write_videofile(
 				os.path.join('../output', self.filename), self.fps)
