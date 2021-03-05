@@ -4,79 +4,41 @@ import moviepy.editor as mp
 import os
 sys.path.append('../')
 
-from kernel.Utils import *
-from kernel.Temporal import Temporal
+from kernel.Utils import timeToSeconds, hexToRgb
 
-class Clip(abc.ABC):
-	"""
-	Abstraction for clips
-	"""
-	def __init__(self, name, temporal):
-		self.temporal = temporal
-		self.name = name
+
+
+DEFAULT_VIDEO_SIZE = (256, 144) #(1280, 720)
+
+
+
+class Clip(abc.ABC): # Abstraction for clips
+	def __init__(self, variable_name):
+		self.variable_name = variable_name
 		self.content = None
-
-	@abc.abstractmethod
-	def declare(self):
-		"""open or create clip"""
-		pass
-
-class Video(Clip):
-	def __init__(self, name, temporal, filename):
-		super().__init__(name, temporal)
-		self.filename = filename
-		self.defaultVideoSize = (256, 144)
-		self.declare()
-		self.duration = temporal.get_duration()
-		"""self.size = self.defaultVideoSize
-		self.end = temporal.get_endTime()"""
-
-	def get_temporal(self):
-		return self.temporal
 
 	def get_content(self):
 		return self.content
-
-	def declare(self):
-		self.content = mp.VideoFileClip(
-			os.path.join('../resources/videos', self.filename)
-		).resize(newsize=self.defaultVideoSize)
-		if self.temporal and self.temporal.get_temporalPosition() is not None and self.temporal.get_duration() is not None:
-			# self.content.
-			self.content = self.content.subclip(
-				self.temporal.get_temporalPosition(),
-				self.temporal.get_endTime()
-			)
-
-		"""self.get_frame = self.content.get_frame
-		self.mask = self.content.mask
-		self.audio = self.content.audio"""
+	
+	def set_content(self, content):
+		self.content = content
+		
+		
+		
+class Video(Clip): # A video loaded from file
+	def __init__(self, variable_name, filename):
+		super().__init__(variable_name)
+		self.filename = filename
+		super().set_content(mp.VideoFileClip(os.path.join('../resources/videos', self.filename)).resize(newsize = DEFAULT_VIDEO_SIZE))
+		
 
 
-class Blank(Clip):
-	"""
-	An empty clip
-	"""
-	def __init__(self, name, temporal, color='black'): # by default the background is black
-		super().__init__(name, temporal)
-		self.temporal = temporal
-		self.color = hexToRgb(color) if color.startswith('#') else color
-		self.defaultVideoSize = (256, 144)
+class Blank(Clip): # An empty clip with colored background
+	def __init__(self, variable_name, duration_str, background_color='#fff'): # by default the background is black
+		super().__init__(variable_name)
+		self.duration = timeToSeconds(duration_str)
+		self.background_color = hexToRgb(background_color) if background_color.startswith('#') else background_color
+		super().set_content(mp.ColorClip(size = DEFAULT_VIDEO_SIZE, color = self.background_color, duration = self.duration))
 
-	def get_temporal(self):
-		return self.temporal
 
-	def declare(self):
-		"""create background"""
-		self.content = mp.ColorClip(
-			size=self.defaultVideoSize,
-			color=self.color,
-			duration=self.temporal.get_duration())
-		return
 
-class Concat(Clip): ### ??? HAS NOTHING TO DO HERE ???
-	"""
-	A clip made with other clips
-	"""
-	def __init__(self, name, clipList, temporal):
-		super().__init__(name, temporal)

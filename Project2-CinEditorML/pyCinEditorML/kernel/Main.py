@@ -4,15 +4,15 @@ no DSL version of the demo application
 import sys
 sys.path.append('../')
 
-def demo():
-	from kernel.App import App
-	from kernel.Clips import Video, Blank
-	from kernel.Actions import Action, AddText, Concatenate, \
-		ConcatenateWithTransition, Cut, Superpose, Export
+from kernel.App import App
+from kernel.Clips import Video, Blank
+from kernel.Actions import Action, AddText, Concatenate, \
+	ConcatenateWithTransition, Cut, Superpose, Export
 
-	from kernel.Utils import timeToSeconds
-	from kernel.Temporal import Temporal
+from kernel.Utils import timeToSeconds
+from kernel.Temporal import Temporal
 
+def test():
 	app = App('main')
 	"""frogs_video = Video(
 		'frogs_video',
@@ -30,6 +30,21 @@ def demo():
 	# print(clipColor.get_temporal())
 	# todo
 
+def scenario1():
+	# (a) add a title on a black background at the beginning for 10 seconds stating where they were and when.
+	t1 = Blank('t1', '10s')
+	t1.content = AddText(t1, 10, 'title').execute()
+	# (b) add a first video clip that appears directly after the title screen
+	v1 = Video('c1', 'frogs.mp4')
+	# (c) add another video clip that appears directly after the first clip
+	v2 = Video('c1', 'frogs2.mp4')
+	# (d) add a thanks sentence at the end, lasting for 15 seconds
+	t2 = Blank('t1', '10s')
+	t2.content = AddText(t2, 10, 'thanks').execute()
+	concat_content = Concatenate([t1, v1, v2, t2]).execute()
+	# (e) export the result as a video file
+	Export(concat_content, 'scenario1.mp4').execute()
+	
 
 if __name__ == '__main__':
-	demo()
+	scenario1()
