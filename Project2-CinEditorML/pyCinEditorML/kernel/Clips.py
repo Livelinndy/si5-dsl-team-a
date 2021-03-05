@@ -27,20 +27,31 @@ class Video(Clip):
 		self.filename = filename
 		self.defaultVideoSize = (256, 144)
 		self.declare()
+		self.duration = temporal.get_duration()
+		"""self.size = self.defaultVideoSize
+		self.end = temporal.get_endTime()"""
 
 	def get_temporal(self):
 		return self.temporal
+
+	def get_content(self):
+		return self.content
 
 	def declare(self):
 		self.content = mp.VideoFileClip(
 			os.path.join('../resources/videos', self.filename)
 		).resize(newsize=self.defaultVideoSize)
 		if self.temporal and self.temporal.get_temporalPosition() is not None and self.temporal.get_duration() is not None:
-			print('X1')
+			# self.content.
 			self.content = self.content.subclip(
 				self.temporal.get_temporalPosition(),
 				self.temporal.get_endTime()
 			)
+
+		"""self.get_frame = self.content.get_frame
+		self.mask = self.content.mask
+		self.audio = self.content.audio"""
+
 
 class Blank(Clip):
 	"""
