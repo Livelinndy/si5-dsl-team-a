@@ -2,13 +2,15 @@ import sys
 import abc
 import os
 sys.path.append('../')
-
 import moviepy.editor as mp
 from moviepy.config import change_settings
-change_settings({"IMAGEMAGICK_BINARY": r"C:\\Program Files\\ImageMagick-7.0.11-Q16\\magick.exe"})
 
-from kernel.App import App
+if sys.platform != 'linux':
+	change_settings({"IMAGEMAGICK_BINARY": r"C:\\Program Files\\ImageMagick-7.0.11-Q16\\magick.exe"})
+else:
+	change_settings({"IMAGEMAGICK_BINARY": r"/usr/bin/magick"})
 
+from kernel.Clips import *
 # pas encore complet
 
 
@@ -23,8 +25,9 @@ class Action(abc.ABC):
 	def execute(self):
 		pass
 
+
 class AddText(Action):
-	def __init__(self, clip, text, color = 'red', font_size=20, pos_x='center', pos_y='center'):
+	def __init__(self, clip, text, color='red', font_size=20, pos_x='center', pos_y='center'):
 		self.clip = clip
 		self.text = text
 		self.color = color
@@ -36,23 +39,30 @@ class AddText(Action):
 		"""add text to clip, return final clip"""
 		tc = mp.TextClip(self.text, fontsize=self.font_size, stroke_color=self.color, stroke_width=1.5)
 		tc = tc.set_pos('center').set_duration(9)
-		return mp.CompositeVideoClip([self.clip, tc])
+		return mp.CompositeVideoClip([self.clip.content, tc])
+
 
 class Concatenate(Action):
 	def __init__(self, clips):
+		#for i in clips:
+		#	print(str(i))
 		self.clips = list(map(lambda v: v.get_content(), clips))
 
 	def execute(self):
+		# for i in self.clips:
+		#	print(i)
 		return mp.concatenate_videoclips(self.clips)
 
 
 # transition enum
 FADE = 0
 SLIDE = 1
-	
+
+
 class ConcatenateWithTransition(Action):
 	def __init__(self, clips, transition=FADE):
 		self.clips = list(map(lambda v: v.get_content(), clips))
+		# self.durations = list(map(lambda v: v.duration, clips))
 		self.transition = transition
 		
 	def concatenateWithFadeTransition(self):
@@ -71,9 +81,12 @@ class ConcatenateWithTransition(Action):
 		
 	def execute(self):
 		"""concatenate with transition, return final clip"""
-		return self.concatenateWithSlideTransition() if self.transition == SLIDE else \
+		content = self.concatenateWithSlideTransition() if self.transition == SLIDE else \
 			self.concatenateWithFadeTransition()
-		
+		print(self.durations)
+		return content
+
+
 class Cut(Action):
 	def __init__(self, clip, from_sec, to_sec):
 		self.clip = clip
@@ -95,13 +108,20 @@ class Superpose(Action):
 	def execute(self):
 		"""superpose clip, return final clip"""
 		return mp.CompositeVideoClip([self.main_clip, self.side_clip.resize(self.ratio).set_position((self.pos_x, self.pos_y))])
-			
+
+
 class Export(Action):
-	def __init__(self, clip, filename='res.mp4', fps = 30):
+	def __init__(self, clip, filename='res.mp4', fps=30):
 		self.clip = clip
 		self.filename = filename
 		self.fps = fps
 		
 	def execute(self):
-		return self.clip.write_videofile(
-			os.path.join('../output', self.filename), self.fps)
+		# print(type(self.clip))
+		# print(type(self.clip) is Video)
+		if type(self.clip) is Video or type(self.clip) is Blank:
+			return self.clip.content.write_videofile(
+				os.path.join('../output', self.filename), self.fps)
+		else:
+			return self.clip.write_videofile(
+				os.path.join('../output', self.filename), self.fps)

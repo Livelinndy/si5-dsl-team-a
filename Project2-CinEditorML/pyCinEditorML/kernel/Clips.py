@@ -48,8 +48,8 @@ class Video(Clip):
 				self.temporal.get_endTime()
 			)
 
-		"""self.get_frame = self.content.get_frame
-		self.mask = self.content.mask
+		"""self.get_frame = self.content.get_frame"""
+		"""self.mask = self.content.mask
 		self.audio = self.content.audio"""
 
 
@@ -57,22 +57,27 @@ class Blank(Clip):
 	"""
 	An empty clip
 	"""
-	def __init__(self, name, temporal, color='black'): # by default the background is black
+	def __init__(self, name, temporal, color='#fff'): # by default the background is black
 		super().__init__(name, temporal)
-		self.temporal = temporal
 		self.color = hexToRgb(color) if color.startswith('#') else color
 		self.defaultVideoSize = (256, 144)
+		self.declare()
+		self.duration = temporal.get_duration()
 
 	def get_temporal(self):
 		return self.temporal
 
+	def get_content(self):
+		return self.content
+
 	def declare(self):
 		"""create background"""
+		print(f"temporal.get_duration= {self.temporal.get_duration()}")
 		self.content = mp.ColorClip(
 			size=self.defaultVideoSize,
 			color=self.color,
 			duration=self.temporal.get_duration())
-		return
+
 
 class Concat(Clip): ### ??? HAS NOTHING TO DO HERE ???
 	"""

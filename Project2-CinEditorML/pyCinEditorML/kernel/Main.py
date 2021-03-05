@@ -4,6 +4,7 @@ no DSL version of the demo application
 import sys
 sys.path.append('../')
 
+
 def demo():
 	from kernel.App import App
 	from kernel.Clips import Video, Blank
@@ -18,12 +19,15 @@ def demo():
 		'frogs_video',
 		Temporal('40s', 0, '46s'),
 		'frogs.mp4')"""
-	# 13s
+
 	iphone_video = Video('iphone_video', Temporal('27s', 24, '37s'), 'iphone7.mp4')
-	mario_video = Video('mario_video', Temporal('0s', 3, '3s'), 'hotel_mario.mp4')
-	final_video = ConcatenateWithTransition([iphone_video, mario_video])\
-		.concatenateWithFadeTransition()
+	intro_video = Blank('blank_video', Temporal('0s', 5, '5s'), '#000')
+	# intro_video = AddText(intro_video, 'An Iphone Video').execute()
+	# mario_video = Video('mario_video', Temporal('0s', 3, '3s'), 'hotel_mario.mp4')
+	# final_video = ConcatenateWithTransition([iphone_video, mario_video])\
+	# .concatenateWithFadeTransition()
 	# final_video = Concatenate([iphone_video, mario_video]).execute()
+	final_video = Concatenate([intro_video, iphone_video]).execute()
 	Export(final_video, 'final_output.mp4').execute()
 
 	# clipColor = Blank("black_clip", Temporal('1m35s', 14), "#fff")
