@@ -90,7 +90,7 @@ def demoVideo():
                    # (b) stack a side video over the main video in the corner
                    Superpose('cf', 'c1side'),
                    # (c) export the result as a video file
-                   Export('cf', 's3_kernel.mp4')]
+                   Export('cf', 'final_demo.mp4')]
         code = ""
         for a in actions:
                 code += a.execute()
