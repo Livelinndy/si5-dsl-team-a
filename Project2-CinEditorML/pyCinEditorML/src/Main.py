@@ -14,7 +14,7 @@ Where "test1" is the name of a .ceml script from the resources folder
 """
 
 
-def process(line):
+"""def process(line):
 	clip_name = None
 	clips = None
 	filename = None
@@ -68,7 +68,7 @@ def process(line):
 	if regex_key == 'add_title':
 		title_text = match.group('title_text')
 		clip_name = match.group('clip_name')
-		print(title_text + ' ' + clip_name)
+		print(title_text + ' ' + clip_name)"""
 
 
 
@@ -86,14 +86,7 @@ if len(sys.argv) > 1:
 	finalArray = []
 	tmp = []
 	array = re.split('\n+', text)
-	for l in array:
-		process(l)
-		
-	# print(array)
-else:
-	print("Specify the CEML script name")
 
-"""
 	for i in array:
 		s = re.split('//', i)[0].strip()
 		if s != '':
@@ -113,4 +106,10 @@ else:
 				tmpText = []
 				isText = False
 	print(finalArray)
-"""
+
+	end = time.time()
+	# print(end - start)
+	print(array)
+else:
+	print("Specify the CEML script name")
+
