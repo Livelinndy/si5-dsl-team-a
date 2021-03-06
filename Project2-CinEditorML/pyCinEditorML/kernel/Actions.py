@@ -16,13 +16,13 @@ class ActionOnClip(Action):
 
 		
 class AddText(ActionOnClip):
-	def __init__(self, clip_name, duration_str, text, start_at = 'beginning', text_color = 'red', font_size = 20, pos_x = 'center', pos_y = 'center'):
+	def __init__(self, clip_name, text, duration_str = '10s', start_at = 'beginning', text_color = 'red', font_size = 20, pos_x = 'center', pos_y = 'center'):
 		super().__init__(clip_name)
 		self.text = text
 		self.text_color = 'red' if text_color is None else text_color
 		self.font_size = 20 if font_size is None else font_size
 		self.position = ('center', 'center') if (pos_x is None or pos_y is None) else (pos_x, pos_y)
-		self.duration = timeToSeconds(duration_str)
+		self.duration = 10 if duration_str is None else timeToSeconds(duration_str)
 		self.start_at = 'beginning' if start_at is None else start_at
 		
 	def execute(self): # Add text to clip, return final clip
