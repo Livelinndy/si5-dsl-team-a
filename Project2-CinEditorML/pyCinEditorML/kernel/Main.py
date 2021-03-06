@@ -79,13 +79,12 @@ def demoVideo():
         actions = [AppInit(),
                    # (a) add fade out fade in transitions when creating the main video
                    Blank('t1', '10s'),
-                   AddText('t1', '10s', 'introduction title'),
+                   AddText('t1', '10s', 'Frog song !'),
                    Video('c1side', 'frogs.mp4', '33s', '1m05s'),
                    Video('c1a', 'frogs.mp4', '9s', '22s'),
                    Video('c1b', 'frogs.mp4', '1m33s', '1m45s'),
                    Video('c1c', 'frogs.mp4', '2m03s', '2m10s'),
-                   AddText('c1a', '10s', 'Wow, what a nice frog', pos_y = 'bottom'),
-                   AddText('c1c', '10s', 'Wow, what a nice frog', pos_y = 'bottom'),
+                   AddText('c1a', '10s', 'Wow, what a nice song', pos_y = 'top'),
                    ConcatenateWithTransition(['t1','c1a', 'c1b', 'c1c'], 'cf', FADE),
                    # (b) stack a side video over the main video in the corner
                    Superpose('cf', 'c1side'),
