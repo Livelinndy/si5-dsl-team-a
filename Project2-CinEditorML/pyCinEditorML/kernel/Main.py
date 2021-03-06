@@ -75,8 +75,31 @@ def scenario3():
         print(code)
         exec(code)
 
+def demoVideo():
+        actions = [AppInit(),
+                   # (a) add fade out fade in transitions when creating the main video
+                   Blank('t1', '10s'),
+                   AddText('t1', '10s', 'introduction title'),
+                   Video('c1side', 'frogs.mp4', '33s', '1m05s'),
+                   Video('c1a', 'frogs.mp4', '9s', '22s'),
+                   Video('c1b', 'frogs.mp4', '1m33s', '1m45s'),
+                   Video('c1c', 'frogs.mp4', '2m03s', '2m10s'),
+                   AddText('c1a', '10s', 'Wow, what a nice frog', pos_y = 'bottom'),
+                   AddText('c1c', '10s', 'Wow, what a nice frog', pos_y = 'bottom'),
+                   ConcatenateWithTransition(['t1','c1a', 'c1b', 'c1c'], 'cf', FADE),
+                   # (b) stack a side video over the main video in the corner
+                   Superpose('cf', 'c1side'),
+                   # (c) export the result as a video file
+                   Export('cf', 's3_kernel.mp4')]
+        code = ""
+        for a in actions:
+                code += a.execute()
+        print(code)
+        exec(code)
+
 if __name__ == '__main__':
     #scenario1()
     #scenario2()
-    scenario3()
+    #scenario3()
+    demoVideo()
         
