@@ -1,14 +1,6 @@
 import sys
 import abc
-import os
 sys.path.append('../')
-import moviepy.editor as mp
-from moviepy.config import change_settings
-
-if sys.platform != 'linux':
-	change_settings({"IMAGEMAGICK_BINARY": r"C:\\Program Files\\ImageMagick-7.0.11-Q16\\magick.exe"})
-else:
-	change_settings({"IMAGEMAGICK_BINARY": r"/usr/bin/magick"})
 
 from kernel.Utils import timeToSeconds, arrToStr
 
