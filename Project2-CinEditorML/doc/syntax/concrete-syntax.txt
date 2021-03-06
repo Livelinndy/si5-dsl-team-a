@@ -1,50 +1,57 @@
-<root>				::= <initialization> <actions>
+<root>              ::= <actions>
 
-<initialization>		::= ("clip" <IDENTIFIER> ( <import> | <declaration> ) )+
-<import>			::= "is" <videofilename> <optional-cut>?
-<declaration>			::= <background> <duration>
+<actions>           ::= ( <init> | <add-sth> | <concat> | <export> )*
 
-<optional-cut>			::= "from" <time> "to" <time>
+<init>              ::= "clip" <IDENTIFIER> ( <video> | <blank> )
 
-<background>			::= <color> "background"
-<duration>			::= "during" <time>
+<video>             ::= "is" <MP4> <subclip>?
 
-<actions>			::= ( <add-something> | <concat> | <export> )*
+<subclip>           ::= "from" <TIME> "to" <TIME>
 
-<add-something>			::= "add" ( <add-text> | <add-clip-on-top> )
-<add-text>			::= ("title" | "subtitle" | ("text" <position> <textsize> )) <text> ("at" <time> <duration>)?
-<add-clip-on-top>		::= "clip" "on" <position> "scale" <ratio> "to" <IDENTIFIER>
+<blank>             ::= <background> <duration>
 
-<concat>				::= "concat" <IDENTIFIER> "and" <IDENTIFIER> <concat-additional>* <with-transition>? "to" <IDENTIFIER>
-<concat-additional>		::= "and" <IDENTIFIER>
+<background>        ::= <color> "background"
 
-<with-transition>		::= "with" "transition" <transition-type>
-<transition-type>		::= "fade"
+<color>             ::= "color" <HEXCOLOR>
 
-<export>			::= "export" <IDENTIFIER> "as" <videofilename>
+<duration>          ::= "during" <TIME>
 
-<color>				::= "color" <hexcolor>
-<hexcolor>			::= "#" [0-9abcdef]{3,6}
+<add-sth>           ::= "add" ( <add-text> | <add-clip-on-top> )
 
-<videofilename>			::= """ <IDENTIFIER> ".mp4""
+<add-text>          ::= <text-type> <TEXT> ( "at" ( <TIME> | "end" ) <duration> )?
 
-<position>			::= <horizontal-position> <vertical-position>
-<horizontal-position>		::= "left" | "center" | "right"
-<vertical-position>	 	::= "top" | "center" | "bottom"
+<text-type>         ::= ( "title" | "subtitle" | ("text" <POSITION> <NUMBER>? ) )
 
-<time>				::= "-"? ( ( "\d{1,2}h") ? "\d{1,2}m" )? "\d{1,2}s"
+<add-clip-on-top>   ::= "clip" "on" <POSITION> "scale" <RATIO> "to" <IDENTIFIER>
 
-<textsize>			::= <DIGIT>+
+<concat>            ::= "concat" <IDENTIFIER> "and" <IDENTIFIER> <concat-additional>* <with-transition>? "to" <IDENTIFIER>
 
-<text>				::= """ ( <IDENTIFIER> | <WHITESPACE> )+ """
+<concat-additional> ::= "and" <IDENTIFIER>
 
-<ratio>				::= ( "0" | "1" ) "." <DIGIT>
+<with-transition>   ::= "with" "transition" <transition-type>
 
-<IDENTIFIER>			::= ( <LOWERCASE> | <UPPERCASE> ) ( <LOWERCASE> | <UPPERCASE> | <DIGIT> )+
+<transition-type>   ::= "FADE"
+
+<export>            ::= "export" <IDENTIFIER> "as" <MP4>
+
+<MP4>				::= """ <IDENTIFIER> ".mp4""
+
+<POSITION>			::= <POS_X>? <POS_Y>?
+<POS_X>				::= "left" | "center" | "right"
+<POS_Y>	 			::= "top" | "center" | "bottom"
+
+<HEXCOLOR>			::= "#" [0-9abcdef]{3,6}
+
+<TIME>				::= "-"? ( ( "\d{1,2}h") ? "\d{1,2}m" )? "\d{1,2}s"
+<TEXT>				::= """ ( <IDENTIFIER> | <WHITESPACE> )+ """
+<RATIO>				::= ( "0" | "1" ) "." <DIGIT>
+
+<NUMBER>			::= <DIGIT>+
+<IDENTIFIER>		::= ( <LOWERCASE> | <UPPERCASE> ) ( <LOWERCASE> | <UPPERCASE> | <DIGIT> )+
 <LOWERCASE>			::= [a-z]
 <UPPERCASE>			::= [A-Z]
 <DIGIT>				::= [0-9]
 
 <NEWLINE>			::= ("\r"? "\n" | "\r")+		-> skip
-<WHITESPACE>			::= ((" " | "\t")+)			-> skip
+<WHITESPACE>		::= ((" " | "\t")+)			-> skip
 <COMMENT>			::= "//" ~( "\r" | "\n" )*		-> skip

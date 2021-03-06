@@ -5,4 +5,3 @@ clip c1c is "frogs.mp4" from 2m03s to 2m10s
 concat c1a and c1b and c1c with transition FADE to cf
 add clip c1side on bottom right scale 0.3 to cf
 export cf as "s3_res.mp4"
-
