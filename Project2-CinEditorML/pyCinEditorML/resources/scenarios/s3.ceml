@@ -1,7 +1,8 @@
-clip c1 is "mecommenting.mp4"
-clip c2 is "mainvideo0.mp4"
-clip c3 is "mainvideo1.mp4"
-clip c4 is "mainvideo2.mp4"
-concat c2 and c3 and c4 with transition fade to cf
-add clip c1 on bottom right scale 0.3 to cf
-export cf as "newname.mp4"
+clip c1side is "frogs.mp4" from 33s to 1m05s
+clip c1a is "frogs.mp4" from 9s to 22s
+clip c1b is "frogs.mp4" from 1m33s to 1m45s
+clip c1c is "frogs.mp4" from 2m03s to 2m10s
+concat c1a and c1b and c1c with transition FADE to cf
+add clip c1side on bottom right scale 0.3 to cf
+export cf as "s3_res.mp4"
+
