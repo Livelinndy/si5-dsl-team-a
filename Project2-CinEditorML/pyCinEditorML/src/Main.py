@@ -37,9 +37,7 @@ def process(line):
     regexes = {
         'import_video_with_time': re.compile('clip\s+(?P<clip_name>[a-zA-Z0-9]+)\s+is\s+"(?P<filename>[^"]+)"\s+from\s+(?P<begin>[0-9]*h?[0-9]*m?[0-9]+s)\s+to\s+(?P<end>[0-9]*h?[0-9]*m?[0-9]+s)'),
         'import_video': re.compile('clip\s+(?P<clip_name>[a-zA-Z0-9]+)\s+is\s+"(?P<filename>[^"]+)"'),
-        'add_title': re.compile('add\s+title\s+"(?P<text_content>[^"]+)"\s+to\s+(?P<clip_name>[a-zA-Z0-9]+)(\s+at\s+(?P<begin>[0-9]*h?[0-9]*m?[0-9]+s))?(\s+during\s+(?P<duration>[0-9]*h?[0-9]*m?[0-9]+s))?'),
-        'add_subtitle': re.compile('add\s+subtitle\s+"(?P<text_content>[^"]+)"\s+to\s+(?P<clip_name>[a-zA-Z0-9]+)(\s+at\s+(?P<begin>[0-9]*h?[0-9]*m?[0-9]+s))?(\s+during\s+(?P<duration>[0-9]*h?[0-9]*m?[0-9]+s))?'),
-        'add_text': re.compile('add\s+(sub)?title\s+"(?P<text_content>[^"]+)"\s+(color\s+(?P<rgb_color>#[0-9a-f]+)\s+)?(fontsize\s+(?P<font_size>[0-9]+px)\s+)?to\s+(?P<clip_name>[a-zA-Z0-9]+)(\s+at\s+(?P<begin>[0-9]*h?[0-9]*m?[0-9]+s))?(\s+during\s+(?P<duration>[0-9]*h?[0-9]*m?[0-9]+s))?'),
+        'add_text': re.compile('add\s+(?P<text_type>(text|subtitle|title))\s+"(?P<text_content>[^"]+)"\s+(color\s+(?P<rgb_color>#[0-9a-f]+)\s+)?(fontsize\s+(?P<font_size>[0-9]+px)\s+)?to\s+(?P<clip_name>[a-zA-Z0-9]+)(\s+at\s+(?P<begin>[0-9]*h?[0-9]*m?[0-9]+s))?(\s+during\s+(?P<duration>[0-9]*h?[0-9]*m?[0-9]+s))?'),
         'blank': re.compile('clip\s+(?P<blank_name>[a-zA-Z0-9]+)\s+color\s+(?P<rgb_color>#[0-9a-f]+)\s+background\s+during\s+(?P<duration>[0-9]*h?[0-9]*m?[0-9]+s)'),
         'stack':  re.compile('add\s+clip\s+(?P<clip_on_top>[a-zA-Z0-9]+)\s+on\s+(?P<vertical_pos>[a-zA-Z]+)\s+(?P<horizontal_pos>[a-zA-Z]+)\s+scale\s+(?P<scale>[0-9]+.?[0-9]*)\s+to\s+(?P<clip_beneath>[a-zA-Z0-9]+)'),
         'concat_with_transition': re.compile('concat\s+(?P<clips>.+)\s+with\s+transition\s+(?P<transition>[a-zA-Z0-9]+)\s+to\s+(?P<clip_final_name>[a-zA-Z0-9]+)'),
@@ -64,27 +62,19 @@ def process(line):
         return Export(clip_name, filename)
 
     if regex_key == 'add_text':
+        text_type = match.group('text_type')
         duration = match.group('duration')
         rgb_color = match.group('rgb_color')
         text_content = match.group('text_content')
         font_size = match.group('font_size')
         clip_name = match.group('clip_name')
         begin = match.group('begin')
-        return AddText(clip_name, duration, text_content, begin, rgb_color, font_size)
-
-    if regex_key == 'add_title':
-        duration = match.group('duration')
-        text_content = match.group('text_content')
-        clip_name = match.group('clip_name')
-        begin = match.group('begin')
-        return AddText(clip_name, duration, text_content, begin, 'red', 40)
-
-    if regex_key == 'add_subtitle':
-        duration = match.group('duration')
-        text_content = match.group('text_content')
-        clip_name = match.group('clip_name')
-        begin = match.group('begin')
-        return AddText(clip_name, duration, text_content, begin, 'red', 20, pos_y = 'bottom')
+        if text_type == 'title':
+            return AddText(clip_name, text_content, duration, begin, rgb_color, 40)
+        elif text_type == 'subtitle':
+            return AddText(clip_name, text_content, duration, begin, rgb_color, 20, pos_y = 'bottom')
+        else:
+            return AddText(clip_name, text_content, duration, begin, rgb_color, font_size)
 
     if regex_key == 'stack':
         clip_on_top = match.group('clip_on_top')
@@ -126,7 +116,7 @@ if len(sys.argv) > 1:
     lines = re.split('\n+', text)
     for l in lines:
         actions.append(process(l))
-    #print(actions)
+    print(actions)
     code = ""
     for a in actions:
         code += a.execute()
