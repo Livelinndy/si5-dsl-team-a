@@ -28,7 +28,7 @@ def scenario1():
         for a in actions:
                 code += a.execute()
         print(code)
-        exec(code)
+        #exec(code)
 
 def scenario2():
     actions = [AppInit(),
@@ -55,7 +55,7 @@ def scenario2():
     for a in actions:
         code += a.execute()
     print(code)
-    exec(code)
+    #exec(code)
 
 def scenario3():
         actions = [AppInit(),
@@ -73,7 +73,7 @@ def scenario3():
         for a in actions:
                 code += a.execute()
         print(code)
-        exec(code)
+        #exec(code)
 
 def demoVideo():
         actions = [AppInit(),
@@ -98,8 +98,8 @@ def demoVideo():
         exec(code)
 
 if __name__ == '__main__':
-    #scenario1()
-    #scenario2()
-    #scenario3()
+    scenario1()
+    scenario2()
+    scenario3()
     demoVideo()
         

@@ -27,11 +27,11 @@ class AddText(ActionOnClip):
 	def __init__(self, clip_name, duration_str, text, start_at = 'beginning', text_color = 'red', font_size = 20, pos_x = 'center', pos_y = 'center'):
 		super().__init__(clip_name)
 		self.text = text
-		self.text_color = text_color
-		self.font_size = font_size
-		self.position = (pos_x, pos_y)
+		self.text_color = 'red' if text_color is None else text_color
+		self.font_size = 20 if font_size is None else font_size
+		self.position = ('center', 'center') if (pos_x is None or pos_y is None) else (pos_x, pos_y)
 		self.duration = timeToSeconds(duration_str)
-		self.start_at = start_at
+		self.start_at = 'beginning' if start_at is None else start_at
 		
 	def execute(self): # Add text to clip, return final clip
 		res = "tc = mp.TextClip('" + self.text + "', fontsize = " + str(self.font_size) + ", stroke_color = '" + self.text_color + "', stroke_width = 1.5)\n"
@@ -58,7 +58,7 @@ FADE = 0
 class ConcatenateWithTransition(Concatenate):
 	def __init__(self, clip_names, dest, transition=FADE):
 		super().__init__(clip_names, dest)
-		self.transition = transition
+		self.transition = FADE if transition is None else transition
 		
 	def concatenateWithFadeTransition(self):
 		res = "fadeTime = 2.5\n"
@@ -90,8 +90,8 @@ class Superpose(ActionOnClip):
 	def __init__(self, clip_name, side_clip_name, pos_x = 'right', pos_y = 'bottom', ratio = 0.30):
 		super().__init__(clip_name)
 		self.side_clip_name = side_clip_name
-		self.position = (pos_x, pos_y)
-		self.ratio = ratio
+		self.position = ('center', 'center') if (pos_x is None or pos_y is None) else (pos_x, pos_y)
+		self.ratio = 0.30 if ratio is None else ratio
 		
 	def execute(self):
 		res = self.clip_name + " = mp.CompositeVideoClip([" + self.clip_name + ", " + self.side_clip_name + ".resize(" + str(self.ratio) + ").set_position(" + str(self.position) + ")])\n"

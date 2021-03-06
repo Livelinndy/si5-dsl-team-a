@@ -1,3 +1,0 @@
-clip c1 is "frogs.mp4"
-add title "FROGS" to c1
-export c1 as "movie.mp4"
