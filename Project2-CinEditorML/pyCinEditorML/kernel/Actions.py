@@ -10,7 +10,7 @@ if sys.platform != 'linux':
 else:
 	change_settings({"IMAGEMAGICK_BINARY": r"/usr/bin/magick"})
 
-from kernel.Utils import timeToSeconds
+from kernel.Utils import timeToSeconds, arrToStr
 
 class Action(abc.ABC): # Abstraction for actions on clips	
 	@abc.abstractmethod
@@ -19,13 +19,13 @@ class Action(abc.ABC): # Abstraction for actions on clips
 
 				
 class ActionOnClip(Action):
-	def __init__(self, clip):
-		self.clip = clip
+	def __init__(self, clip_name):
+		self.clip_name = clip_name
 
 		
 class AddText(ActionOnClip):
-	def __init__(self, clip, duration_str, text, start_at = 'beginning', text_color = 'red', font_size = 20, pos_x = 'center', pos_y = 'center'):
-		super().__init__(clip)
+	def __init__(self, clip_name, duration_str, text, start_at = 'beginning', text_color = 'red', font_size = 20, pos_x = 'center', pos_y = 'center'):
+		super().__init__(clip_name)
 		self.text = text
 		self.text_color = text_color
 		self.font_size = font_size
@@ -34,72 +34,76 @@ class AddText(ActionOnClip):
 		self.start_at = start_at
 		
 	def execute(self): # Add text to clip, return final clip
-		tc = mp.TextClip(self.text, fontsize = self.font_size, stroke_color = self.text_color, stroke_width = 1.5)
-		tc = tc.set_pos(self.position).set_duration(self.duration)
+		res = "tc = mp.TextClip('" + self.text + "', fontsize = " + str(self.font_size) + ", stroke_color = '" + self.text_color + "', stroke_width = 1.5)\n"
+		res += "tc = tc.set_pos(" + str(self.position) + ").set_duration(" + str(self.duration) + ")\n"
 		if self.start_at != 'beginning':
-			if self.start_at == 'end':
-				tc = tc.set_start(t = self.clip.duration - self.duration)
-			else:
-				tc = tc.set_start(t = timeToSeconds(self.start_at))
-		return mp.CompositeVideoClip([self.clip, tc])
+			res += "tc = tc.set_start(t = " + str(timeToSeconds(self.start_at)) + ")\n"
+		res += self.clip_name + " = mp.CompositeVideoClip([" + self.clip_name + ", tc])\n"
+		return res
 
 			
 class Concatenate(Action):
-	def __init__(self, clips):
-		self.clips = clips
+	def __init__(self, clip_names, dest):
+		self.clip_names = clip_names
+		self.dest = dest
 
 	def execute(self): # Concatenate, return final clip
-		return mp.concatenate_videoclips(self.clips)
+		res = self.dest + " = mp.concatenate_videoclips(" + arrToStr(self.clip_names) + ")\n"
+		return res
 
 	
 # transition enum
 FADE = 0
 	
 class ConcatenateWithTransition(Concatenate):
-	def __init__(self, clips, transition=FADE):
-		super().__init__(clips)
+	def __init__(self, clip_names, dest, transition=FADE):
+		super().__init__(clip_names, dest)
 		self.transition = transition
 		
 	def concatenateWithFadeTransition(self):
-		fadeTime = 2.5
-		clipsToConcat = self.clips
-		clipsWithParams = [clipsToConcat[0]]
-		idx = clipsToConcat[0].duration - fadeTime
-		for video in clipsToConcat[1:]:
-			clipsWithParams.append(video.set_start(idx).crossfadein(fadeTime))
-			idx += video.duration - fadeTime
-		return mp.CompositeVideoClip(clipsWithParams)
+		res = "fadeTime = 2.5\n"
+		res += "clipsToConcat = " + arrToStr(self.clip_names) + "\n"
+		res += "clipsWithParams = [clipsToConcat[0]]\n"
+		res += "idx = clipsToConcat[0].duration - fadeTime\n"
+		res += "for video in clipsToConcat[1:]:\n"
+		res += "	clipsWithParams.append(video.set_start(idx).crossfadein(fadeTime))\n"
+		res += "	idx += video.duration - fadeTime\n"
+		res += self.dest + " = mp.CompositeVideoClip(clipsWithParams)\n"
+		return res
 		
 	def execute(self): # Concatenate with transition, return final clip
 		return self.concatenateWithFadeTransition()
 		
 				
 class Cut(ActionOnClip):
-	def __init__(self, clip, from_time_str, to_time_str):
-		super().__init__(clip)
+	def __init__(self, clip_name, from_time_str, to_time_str):
+		super().__init__(clip_name)
 		self.from_time = timeToSeconds(from_time_str)
 		self.to_time = timeToSeconds(to_time_str)
 		
 	def execute(self): # Cut clip, return final clip
-		return self.clip.subclip(self.from_time, self.to_time)
+		res = self.clip_name + ".subclip(" + str(self.from_time) + ", " + str(self.to_time) + ")\n"
+		return res
 		
 			
 class Superpose(ActionOnClip):
-	def __init__(self, clip, side_clip, pos_x = 'right', pos_y = 'bottom', ratio = 0.30):
-		super().__init__(clip)
-		self.side_clip = side_clip
+	def __init__(self, clip_name, side_clip_name, pos_x = 'right', pos_y = 'bottom', ratio = 0.30):
+		super().__init__(clip_name)
+		self.side_clip_name = side_clip_name
 		self.position = (pos_x, pos_y)
 		self.ratio = ratio
 		
-	def execute(self): # Superpose clip, return final clip
-		return mp.CompositeVideoClip([self.clip, self.side_clip.resize(self.ratio).set_position(self.position)])
+	def execute(self):
+		res = self.clip_name + " = mp.CompositeVideoClip([" + self.clip_name + ", " + self.side_clip_name + ".resize(" + str(self.ratio) + ").set_position(" + str(self.position) + ")])\n"
+		return res
 	
 
 class Export(ActionOnClip):
-	def __init__(self, clip, filename = 'res.mp4', fps = 30):
-		super().__init__(clip)
+	def __init__(self, clip_name, filename = 'res.mp4', fps = 30):
+		super().__init__(clip_name)
 		self.filename = filename
 		self.fps = fps
 		
 	def execute(self):
-		return self.clip.write_videofile(os.path.join('../output', self.filename), self.fps)
+		res = self.clip_name + ".write_videofile(os.path.join('../output', '" + self.filename + "'), " + str(self.fps) + ")\n"
+		return res

@@ -31,3 +31,13 @@ def hexToRgb(value):
 		for i in value:
 			finalValue += i + i
 	return list(int(finalValue[i:i+2], 16) for i in (0, 2, 4))
+	
+def arrToStr(arr):
+	res = "["
+	l = len(arr)
+	for i in range(l):
+		res += arr[i]
+		if i < l-1:
+			res += ","
+	res += "]"
+	return res

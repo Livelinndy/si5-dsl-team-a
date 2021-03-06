@@ -5,13 +5,11 @@
 <init>              ::= "clip" <IDENTIFIER> ( <video> | <blank> )
 
 <video>             ::= "is" <MP4> <subclip>?
-
 <subclip>           ::= "from" <TIME> "to" <TIME>
 
 <blank>             ::= <background> <duration>
 
 <background>        ::= <color> "background"
-
 <color>             ::= "color" <HEXCOLOR>
 
 <duration>          ::= "during" <TIME>
@@ -19,17 +17,14 @@
 <add-sth>           ::= "add" ( <add-text> | <add-clip-on-top> )
 
 <add-text>          ::= <text-type> <TEXT> ( "at" ( <TIME> | "end" ) <duration> )?
-
 <text-type>         ::= ( "title" | "subtitle" | ("text" <POSITION> <NUMBER>? ) )
 
 <add-clip-on-top>   ::= "clip" "on" <POSITION> "scale" <RATIO> "to" <IDENTIFIER>
 
 <concat>            ::= "concat" <IDENTIFIER> "and" <IDENTIFIER> <concat-additional>* <with-transition>? "to" <IDENTIFIER>
-
 <concat-additional> ::= "and" <IDENTIFIER>
 
 <with-transition>   ::= "with" "transition" <transition-type>
-
 <transition-type>   ::= "FADE"
 
 <export>            ::= "export" <IDENTIFIER> "as" <MP4>
@@ -52,6 +47,6 @@
 <UPPERCASE>			::= [A-Z]
 <DIGIT>				::= [0-9]
 
-<NEWLINE>			::= ("\r"? "\n" | "\r")+		-> skip
-<WHITESPACE>		::= ((" " | "\t")+)			-> skip
-<COMMENT>			::= "//" ~( "\r" | "\n" )*		-> skip
+<NEWLINE>			::= ("\r"? "\n" | "\r")+     -> skip
+<WHITESPACE>		::= ((" " | "\t")+)			 -> skip
+<COMMENT>			::= "//" ~( "\r" | "\n" )*   -> skip

@@ -27,10 +27,11 @@ class Video(Clip): # A video loaded from file
 		self.to_time = None if (to_time_str is None) else timeToSeconds(to_time_str)
 		
 	def execute(self):
-		if (self.from_time is None) or (self.to_time is None):
-			return mp.VideoFileClip(os.path.join('../resources/videos', self.filename)).resize(newsize = DEFAULT_VIDEO_SIZE)
-		else:
-			return mp.VideoFileClip(os.path.join('../resources/videos', self.filename)).resize(newsize = DEFAULT_VIDEO_SIZE).subclip(self.from_time, self.to_time)
+		res = self.variable_name + " = mp.VideoFileClip(os.path.join('../resources/videos', '" + self.filename + "')).resize(newsize = " + str(DEFAULT_VIDEO_SIZE) + ")"
+		if (self.from_time is not None) and (self.to_time is not None):
+			res +=  ".subclip(" + str(self.from_time) + ", " + str(self.to_time) + ")"
+		res += "\n"
+		return res
 
 		
 class Blank(Clip): # An empty clip with colored background
@@ -40,4 +41,5 @@ class Blank(Clip): # An empty clip with colored background
 		self.background_color = hexToRgb(background_color) if background_color.startswith('#') else background_color
 		
 	def execute(self):
-		return mp.ColorClip(size = DEFAULT_VIDEO_SIZE, color = self.background_color, duration = self.duration)
+		res = self.variable_name + " = mp.ColorClip(size = " + str(DEFAULT_VIDEO_SIZE) + ", color = " + str(self.background_color) + ", duration = " + str(self.duration) + ")\n"
+		return res

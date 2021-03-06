@@ -3,24 +3,15 @@ import re
 import sys
 import time
 sys.path.append('../')
-from kernel.App import App
 from kernel.Clips import Video, Blank
 from kernel.Actions import Action, AddText, \
-	Concatenate, ConcatenateWithTransition, Cut, Superpose, Export
-from kernel.Utils import timeToSeconds
-from kernel.Temporal import Temporal
+	Concatenate, ConcatenateWithTransition, Superpose, Export
 
 """
 DSL version of the demo application
 Usage example: Main.py test1
 Where "test1" is the name of a .ceml script from the resources folder
 """
-
-# pas encore lie avec AppBuilder
-
-### TESTS import
-# temporal = Temporal('1m55s', 40)
-# print(temporal)
 
 
 def process(line):
@@ -61,7 +52,7 @@ def process(line):
 		if len(clips_str) > 0:
 			clips_str = re.split('\s+and\s+', clips_str)
 		for i in clips_str:
-			print(i, end=' ')
+			print(i, end = " ")
 		if regex_key == 'concat_with_transition':
 			transition = match.group('transition')
 			print('| ' + transition, end=' ')
@@ -80,9 +71,16 @@ def process(line):
 		print(title_text + ' ' + clip_name)
 
 
-start = time.time()
+
+def getSequenceOfActions(lines):
+	for line in lines:
+		line = line.strip() # strips the newline character
+		count += 1
+		print("Line{}: {}".format(count, line))
+
+
 if len(sys.argv) > 1:
-	file = open('../resources/scenarios/' + sys.argv[1] + '.ceml')
+	file = open('../resources/scenarios/' + sys.argv[1] + '.ceml', 'r')
 	text = file.read()
 	file.close()
 	finalArray = []
@@ -90,8 +88,7 @@ if len(sys.argv) > 1:
 	array = re.split('\n+', text)
 	for l in array:
 		process(l)
-	end = time.time()
-	print(end - start)
+		
 	# print(array)
 else:
 	print("Specify the CEML script name")

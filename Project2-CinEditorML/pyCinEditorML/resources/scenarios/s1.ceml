@@ -2,6 +2,6 @@ clip t1 color #000 background during 10s
 add title "title: frogs" to t1 during 10s
 clip c1 is "frogs.mp4"
 clip c2 is "frogs2.mp4"
-add title "thanks for watching" to c2 at end
+add title "thanks for watching" to c2 at 1m55s
 concat t1 and c1 and c2 to cf
 export cf as "s1_res.mp4"
