@@ -6,6 +6,7 @@ sys.path.append('../')
 from kernel.Clips import Video, Blank
 from kernel.Actions import Action, AddText, \
 	Concatenate, ConcatenateWithTransition, Superpose, Export
+from Exceptions import UndefinedAction, UndefinedClip, SyntaxError
 
 """
 DSL version of the demo application
@@ -70,13 +71,6 @@ Where "test1" is the name of a .ceml script from the resources folder
 		clip_name = match.group('clip_name')
 		print(title_text + ' ' + clip_name)"""
 
-
-
-def getSequenceOfActions(lines):
-	for line in lines:
-		line = line.strip() # strips the newline character
-		count += 1
-		print("Line{}: {}".format(count, line))
 
 
 if len(sys.argv) > 1:
