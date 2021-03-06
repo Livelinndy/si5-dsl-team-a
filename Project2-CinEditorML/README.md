@@ -1,4 +1,4 @@
-# Embedded DSL for video montage using Python and moviepy library
+# External DSL for video montage using Python and moviepy library
 
 ## ImageMagick Linux SETUP/FIX:
 
