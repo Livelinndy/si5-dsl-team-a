@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import re
 import sys
+import time
 sys.path.append('../')
 from kernel.App import App
 from kernel.Clips import Video, Blank
@@ -79,6 +80,7 @@ def process(line):
 		print(title_text + ' ' + clip_name)
 
 
+start = time.time()
 if len(sys.argv) > 1:
 	file = open('../resources/scenarios/' + sys.argv[1] + '.ceml')
 	text = file.read()
@@ -88,6 +90,8 @@ if len(sys.argv) > 1:
 	array = re.split('\n+', text)
 	for l in array:
 		process(l)
+	end = time.time()
+	print(end - start)
 	# print(array)
 else:
 	print("Specify the CEML script name")
