@@ -13,7 +13,7 @@ from kernel.Utils import timeToSeconds
 def scenario1():
 	# (a) add a title on a black background at the beginning for 10 seconds
 	t1 = Blank('t1', '10s').execute()
-	t1 = AddText(t1, 10, 'title: frogs').execute()
+	t1 = AddText(t1, '10s', 'title: frogs').execute()
 
 	# (b) add a first video clip that appears directly after the title screen
 	v1 = Video('c1', 'frogs.mp4').execute()
@@ -22,7 +22,7 @@ def scenario1():
 	v2 = Video('c2', 'frogs2.mp4').execute()
 
 	# (d) add a thanks sentence at the end, lasting for 15 seconds
-	v2 = AddText(v2, 15, 'thanks for watching', start_after = (v2.duration - 15)).execute()
+	v2 = AddText(v2, '15s', 'thanks for watching', start_at = 'end').execute()
 
 	# (e) export the result as a video file
 	cf = Concatenate([t1, v1, v2]).execute()
@@ -31,7 +31,7 @@ def scenario1():
 def scenario2():
         # (a) add an introduction title on a black background at the beginning for 10 seconds
         t1 = Blank('t1', '10s').execute()
-        t1 = AddText(t1, 10, 'introduction title').execute()
+        t1 = AddText(t1, '10s', 'introduction title').execute()
 
         # (b) load a first video clip clip1
         # (c) create two clips clip1a and clip1b respectively taken from 00:23 to 01:47 min and from 02:01 to 02:21 min
@@ -40,15 +40,15 @@ def scenario2():
 
         # (d) add a subtitle to clip1a from the beginning and for 10 seconds,
         #     followed by another subtitle starting 30 seconds after the end of the first one and visible for 10 seconds
-        c1a = AddText(c1a, 10, 'subtitle s1a', pos_y = 'bottom').execute()
-        c1a = AddText(c1a, 10, 'subtitle s2a', pos_y = 'bottom', start_after = 40).execute()
+        c1a = AddText(c1a, '10s', 'subtitle s1a', pos_y = 'bottom').execute()
+        c1a = AddText(c1a, '10s', 'subtitle s2a', pos_y = 'bottom', start_at = '40s').execute()
 
         # (e) add clip1b with a subtitle starting 5 seconds before clip1b and lasting for 15 seconds.
-        c1b = AddText(c1b, 15, 'subtitle s1b', pos_y = 'bottom', start_after = -5).execute()
+        c1b = AddText(c1b, '15s', 'subtitle s1b', pos_y = 'bottom').execute()
 
         # (f) add a thanks conclusive text on a fixed background color (let’s say black).
         t2 = Blank('t1', '10s').execute()
-        t2 = AddText(t2, 10, 'thanks for watching').execute()
+        t2 = AddText(t2, '10s', 'thanks for watching').execute()
 
         # (g) export the result as a video file
         cf = Concatenate([t1, c1a, c1b, t2]).execute()

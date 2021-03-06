@@ -1,4 +1,5 @@
-clip c1 color #fff background during 10s
+clip t1 color #000 background during 10s
+add title "introduction title" to t1 during 10s
 clip clip1a is "clip1.mp4" from 23s to 1m47s
 clip clip1b is "clip1.mp4" from 2m1s to 2m21s
 add subtitle "Oh ! mon dieu !" to clip1a during 10s

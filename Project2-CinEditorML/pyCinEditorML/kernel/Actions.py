@@ -24,18 +24,23 @@ class ActionOnClip(Action):
 
 		
 class AddText(ActionOnClip):
-	def __init__(self, clip, duration, text, start_after = 0, text_color = 'red', font_size = 20, pos_x = 'center', pos_y = 'center'):
+	def __init__(self, clip, duration_str, text, start_at = 'beginning', text_color = 'red', font_size = 20, pos_x = 'center', pos_y = 'center'):
 		super().__init__(clip)
 		self.text = text
 		self.text_color = text_color
 		self.font_size = font_size
 		self.position = (pos_x, pos_y)
-		self.duration = duration
-		self.start_after = start_after
+		self.duration = timeToSeconds(duration_str)
+		self.start_at = start_at
 		
 	def execute(self): # Add text to clip, return final clip
 		tc = mp.TextClip(self.text, fontsize = self.font_size, stroke_color = self.text_color, stroke_width = 1.5)
-		tc = tc.set_pos(self.position).set_duration(self.duration).set_start(t = self.start_after)
+		tc = tc.set_pos(self.position).set_duration(self.duration)
+		if self.start_at != 'beginning':
+			if self.start_at == 'end':
+				tc = tc.set_start(t = self.clip.duration - self.duration)
+			else:
+				tc = tc.set_start(t = timeToSeconds(self.start_at))
 		return mp.CompositeVideoClip([self.clip, tc])
 
 			
