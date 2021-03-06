@@ -1,0 +1,10 @@
+clip t1 color #000 background during 10s
+add title "Frog song !" to t1
+clip c1side is "frogs.mp4" from 33s to 1m05s
+clip c1a is "frogs.mp4" from 9s to 22s
+clip c1b is "frogs.mp4" from 1m33s to 1m45s
+clip c1c is "frogs.mp4" from 2m03s to 2m10s
+add subtitle "very nice" color #f0f font 25 to c1a
+concat t1 and c1a and c1b and c1c to cf with transition FADE
+add clip c1side on bottom right scale 0.3 to cf
+export cf as "final_demo.mp4"
