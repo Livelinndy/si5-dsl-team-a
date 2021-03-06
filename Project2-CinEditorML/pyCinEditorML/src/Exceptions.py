@@ -2,19 +2,19 @@ class UndefinedClip(Exception):
     """
     Exception for references to undefined clips
     """
-	__init__():
-		super().__init__('undefined clip')
-	
+    def __init__(self):
+        super().__init__('undefined clip')
+    
 class UndefinedAction(Exception):
     """
     Exception for references to undefined actions
     """
-	__init__():
-		super().__init__('undefined action')
+    def __init__(self):
+        super().__init__('undefined action')
 
-class SyntaxError(Exception):
+class MySyntaxError(Exception):
     """
     Exception for references to syntax errors
     """
-	__init__():
-		super().__init__('syntax error')
+    def __init__(self):
+        super().__init__('syntax error')

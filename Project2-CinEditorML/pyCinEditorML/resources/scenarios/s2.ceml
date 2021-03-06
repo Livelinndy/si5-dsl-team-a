@@ -3,7 +3,7 @@ add title "introduction title" to t1 during 10s
 clip c1a is "frogs.mp4" from 9s to 1m08s
 clip c1b is "frogs.mp4" from 1m49s to 2m10s
 add subtitle "subtitle s1a" to c1a during 10s
-add subtitle "subtitle s2a" color #f0f fontsize 30px to c1a at 40s during 10s
+add subtitle "subtitle s2a" color #f0f to c1a at 40s during 10s
 add subtitle "subtitle s1b" to c1b during 15s
 clip t2 color #000 background during 10s
 add title "thanks for watching" to t2
